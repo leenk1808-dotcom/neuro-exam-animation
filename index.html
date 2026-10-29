@@ -1,0 +1,419 @@
+<!doctype html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<title>신경언어장애 3D 애니메이션 강의 | 언어재활사 2급 국가시험 대비</title>
+<style>
+*{box-sizing:border-box}
+html,body{margin:0;height:100%;background:#060A14;overflow:hidden;font-family:'Pretendard','Malgun Gothic','Apple SD Gothic Neo','Noto Sans KR',sans-serif}
+#wrap{position:fixed;inset:0;display:flex;align-items:center;justify-content:center}
+#stage{width:1600px;height:900px;position:relative;color:#EAF0FF;overflow:hidden;transform-origin:center center;flex:none;
+  background:radial-gradient(1200px 700px at 62% 42%,#1B2C55 0%,#0E1730 48%,#070C1A 100%)}
+#stage::before{content:'';position:absolute;inset:0;background-image:radial-gradient(rgba(140,170,255,.10) 1px,transparent 1.4px);background-size:34px 34px;mask-image:radial-gradient(900px 600px at 60% 45%,#000 30%,transparent 80%);-webkit-mask-image:radial-gradient(900px 600px at 60% 45%,#000 30%,transparent 80%)}
+#gl{position:absolute;left:0;top:0;width:1600px;height:900px;z-index:1;cursor:grab}
+#gl:active{cursor:grabbing}
+#labels{position:absolute;inset:0;z-index:3;pointer-events:none}
+#scene{position:absolute;inset:0;z-index:4;pointer-events:none}
+#scene .pe{pointer-events:auto}
+.instant *{transition:none!important;animation-duration:0s!important;animation-delay:0s!important}
+
+/* common */
+.hdr{position:absolute;left:58px;top:36px}
+.kicker{font-size:18px;letter-spacing:.16em;color:#8FA6D8;font-weight:800}
+.ttl{font-size:40px;font-weight:800;margin-top:4px;color:#fff;text-shadow:0 4px 24px rgba(0,0,0,.4)}
+.fade{opacity:0;transform:translateY(16px);transition:opacity .55s ease,transform .55s ease}
+.fade.on{opacity:1;transform:none}
+.en{font-family:'Segoe UI','Pretendard','Malgun Gothic',sans-serif}
+.glass{position:absolute;background:linear-gradient(160deg,rgba(255,255,255,.10),rgba(255,255,255,.04));border:1px solid rgba(255,255,255,.16);border-radius:22px;padding:22px 26px;box-shadow:0 20px 50px rgba(0,0,0,.35);backdrop-filter:blur(10px);-webkit-backdrop-filter:blur(10px)}
+.glass h3{margin:0 0 12px;font-size:26px;font-weight:800}
+.glass .row{font-size:22px;line-height:1.55;font-weight:600;color:#DCE5FA}
+.glass .row b{color:#fff}
+.pill{display:inline-block;padding:5px 14px;border-radius:999px;font-size:18px;font-weight:800;background:rgba(255,255,255,.12);margin:3px 4px 3px 0}
+.hl-y{color:#FFE45C}.hl-b{color:#7FB2FF}.hl-g{color:#5EE0A8}.hl-p{color:#FF8CC6}.hl-o{color:#FFAE5C}.hl-r{color:#FF6B6B}
+.pt{position:absolute;right:56px;top:40px;background:#FFE45C;color:#1A1A1A;font-weight:900;font-size:17px;padding:6px 14px;border-radius:10px;letter-spacing:.04em}
+
+/* 3D labels */
+.lb3{position:absolute;left:0;top:0;opacity:0;transition:opacity .45s ease;will-change:transform}
+.lb3.on{opacity:1}.lb3.on.hid{opacity:0}
+.lb3 .dt{position:absolute;left:-6px;top:-6px;width:12px;height:12px;border-radius:50%;background:var(--c);box-shadow:0 0 0 4px rgba(255,255,255,.12),0 0 18px var(--c)}
+.lb3 .ln{position:absolute;left:0;top:-1px;height:2px;background:linear-gradient(90deg,var(--c),rgba(255,255,255,.7));transform-origin:0 50%}
+.lb3 .tx{position:absolute;left:0;top:0;white-space:nowrap;background:rgba(9,14,30,.86);border:2px solid var(--c);color:#fff;font-size:21px;font-weight:800;padding:6px 15px;border-radius:999px;box-shadow:0 8px 20px rgba(0,0,0,.35)}
+.lb3 .tx small{font-size:16px;color:#C7D3F2;font-weight:700;margin-left:6px}
+.lb3.big .tx{font-size:25px;padding:8px 18px}
+
+/* caption */
+#cap{position:absolute;left:50%;bottom:26px;transform:translateX(-50%);max-width:1380px;width:max-content;background:rgba(8,12,26,.88);border:1px solid rgba(255,255,255,.14);color:#fff;font-size:28px;font-weight:600;line-height:1.45;padding:13px 32px 15px;border-radius:18px;opacity:0;transition:opacity .3s;z-index:40;text-align:center;word-break:keep-all;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+#cap.on{opacity:1}
+#cap .n{display:block;font-size:13px;letter-spacing:.2em;color:#8FA6D8;margin-bottom:3px;font-weight:800}
+
+/* quiz */
+.quiz{position:absolute;left:50%;top:120px;translate:-50% 0;width:1120px;padding:30px 38px 28px}
+.quiz .qh{display:flex;align-items:center;gap:14px;margin-bottom:14px}
+.quiz .qh .tag{background:#FF6B6B;color:#fff;font-weight:900;font-size:19px;padding:5px 14px;border-radius:10px}
+.quiz .qh .tag.k{background:#FFE45C;color:#1a1a1a}
+.quiz .q{font-size:30px;font-weight:800;line-height:1.45;word-break:keep-all;padding-right:90px}
+.quiz.compact{top:78px;padding:22px 34px 20px}.quiz.compact .q{font-size:26px}.quiz.compact .box{font-size:20px;line-height:1.6;padding:8px 20px}.quiz.compact .op{font-size:21px;padding:7px 16px}.quiz.compact .ops{gap:7px}
+.quiz .box{margin:14px 0 4px;border:2px solid rgba(255,255,255,.3);border-radius:14px;padding:12px 22px;font-size:23px;line-height:1.7;color:#DCE5FA}
+.quiz .ops{margin-top:14px;display:grid;gap:9px}
+.quiz .op{font-size:25px;font-weight:700;padding:10px 18px;border-radius:12px;background:rgba(255,255,255,.06);border:2px solid transparent;transition:.4s}
+.quiz .op.ok{background:rgba(46,204,138,.22);border-color:#2ECC8A;color:#fff}
+.quiz .op.no{opacity:.38}
+.quiz .cd{position:absolute;right:30px;top:24px;width:66px;height:66px}
+.quiz .cd circle{fill:none;stroke-width:7}
+.quiz .cd .bg{stroke:rgba(255,255,255,.15)}
+.quiz .cd .fg{stroke:#FFE45C;stroke-dasharray:189;stroke-dashoffset:0;transform:rotate(-90deg);transform-origin:33px 33px}
+.quiz.run .cd .fg{animation:cd var(--d,7s) linear forwards}
+@keyframes cd{to{stroke-dashoffset:189}}
+.paused .quiz.run .cd .fg{animation-play-state:paused}
+
+/* menu */
+#menu{position:absolute;inset:0;z-index:80;padding:30px 60px;display:none;background:radial-gradient(1200px 700px at 70% 30%,#1B2C55 0%,#0B1328 55%,#060A16 100%)}
+#menu.on{display:block}
+#menu h1{margin:0;font-size:40px;font-weight:800;color:#fff}
+#menu .sub{font-size:17px;color:#9FB2DA;margin:6px 0 17px}
+#menu .grid{display:grid;grid-template-columns:repeat(4,1fr);gap:12px}
+#menu .card{background:rgba(255,255,255,.07);border:2px solid rgba(255,255,255,.08);border-radius:16px;padding:11px 15px 10px;cursor:pointer;transition:.2s;color:#EAF0FF}
+#menu .card:hover{border-color:#7FB2FF;transform:translateY(-3px)}
+#menu .card .k{font-size:13px;font-weight:800;letter-spacing:.1em;color:#8FA6D8}
+#menu .card .t{font-size:18px;font-weight:800;margin:5px 0 4px;line-height:1.3}
+#menu .card .d{font-size:14px;color:#A9B8D8}
+#menu .card.all{background:linear-gradient(135deg,#3B6FD8,#6A4BD8);border-color:transparent}
+#menu .card.all .k,#menu .card.all .d{color:#E3E9FF}
+#menu .card.soon{opacity:.38;cursor:default}
+#menu .card.soon:hover{transform:none;border-color:rgba(255,255,255,.08)}
+#menu .foot{position:absolute;left:60px;right:60px;bottom:12px;font-size:13px;color:#8394B8;line-height:1.6}
+
+#endov{position:absolute;right:40px;top:36px;z-index:70;display:none;gap:10px}
+#endov.on{display:flex}
+#endov button{font:inherit;font-size:20px;font-weight:800;padding:12px 22px;border-radius:14px;border:none;cursor:pointer;background:#3B6FD8;color:#fff;box-shadow:0 6px 16px rgba(0,0,0,.3)}
+#endov button.ghost{background:rgba(255,255,255,.12);color:#fff}
+
+/* ---- 플레이어 컨트롤 바 ---- */
+#ctrl{position:fixed;left:0;right:0;bottom:0;z-index:100;padding:26px 18px 10px;background:linear-gradient(to top,rgba(0,0,0,.78),rgba(0,0,0,0));opacity:0;transition:opacity .3s;pointer-events:none;font-family:'Pretendard','Malgun Gothic',sans-serif}
+body.mouse.playing #ctrl, body.paused.playing #ctrl{opacity:1;pointer-events:auto}
+#bar{position:relative;height:18px;cursor:pointer;margin:0 4px 6px}
+#bar .trk{position:absolute;left:0;right:0;top:7px;height:4px;border-radius:2px;background:rgba(255,255,255,.28);transition:height .15s,top .15s}
+#bar:hover .trk,#bar.drag .trk{height:6px;top:6px}
+#bar .prog{position:absolute;left:0;top:7px;height:4px;border-radius:2px;background:#FF2D2D;transition:height .15s,top .15s}
+#bar:hover .prog,#bar.drag .prog{height:6px;top:6px}
+#bar .hov{position:absolute;left:0;top:7px;height:4px;background:rgba(255,255,255,.35);border-radius:2px;display:none}
+#bar:hover .hov{display:block;height:6px;top:6px}
+#bar .knob{position:absolute;top:2px;width:14px;height:14px;margin-left:-7px;border-radius:50%;background:#FF2D2D;transform:scale(0);transition:transform .15s}
+#bar:hover .knob,#bar.drag .knob{transform:scale(1)}
+#bar .tk{position:absolute;top:7px;width:3px;height:4px;background:rgba(0,0,0,.55)}
+#bar .tipx{position:absolute;bottom:26px;transform:translateX(-50%);background:rgba(10,14,28,.95);border:1px solid rgba(255,255,255,.2);color:#fff;border-radius:10px;padding:8px 12px;font-size:14px;line-height:1.45;width:300px;display:none;pointer-events:none;box-shadow:0 8px 20px rgba(0,0,0,.4)}
+#bar .tipx b{display:block;font-size:13px;color:#FFD25E;margin-bottom:2px}
+#bar:hover .tipx,#bar.drag .tipx{display:block}
+#ctrl .rw{display:flex;align-items:center;gap:4px}
+#ctrl button{background:none;border:none;color:#fff;cursor:pointer;width:44px;height:40px;border-radius:10px;display:flex;align-items:center;justify-content:center;font-family:inherit}
+#ctrl button:hover{background:rgba(255,255,255,.12)}
+#ctrl svg{width:24px;height:24px;fill:#fff}
+#ctrl .time{color:#fff;font-size:15px;margin:0 10px;font-variant-numeric:tabular-nums;white-space:nowrap}
+#ctrl .ttl2{color:#C9D3EA;font-size:14px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+#ctrl .sp{flex:1}
+#ctrl #cSpd{width:auto;padding:0 12px;font-size:15px;font-weight:800}
+#spdMenu{position:absolute;right:70px;bottom:62px;background:rgba(14,18,32,.97);border:1px solid rgba(255,255,255,.18);border-radius:12px;padding:6px;display:none;min-width:150px;box-shadow:0 10px 30px rgba(0,0,0,.5)}
+#spdMenu.on{display:block}
+#spdMenu div{padding:9px 14px;border-radius:8px;color:#fff;font-size:15px;cursor:pointer;display:flex;justify-content:space-between}
+#spdMenu div:hover{background:rgba(255,255,255,.1)}
+#spdMenu div.sel{color:#FF6B6B;font-weight:800}
+#spdMenu .h{color:#9FB2DA;font-size:13px;cursor:default;padding:6px 14px}
+#spdMenu .h:hover{background:none}
+#hud{display:none}
+body.mouse #hud{opacity:1}
+#hud button{background:rgba(20,28,48,.85);color:#fff;border:1px solid rgba(255,255,255,.25);border-radius:10px;padding:7px 12px;font-size:15px;cursor:pointer;font-family:inherit}
+#hud .pos{color:#cbd5e1;font-size:13px;margin-right:4px;background:rgba(20,28,48,.85);padding:7px 10px;border-radius:10px}
+#tip{position:absolute;left:58px;bottom:110px;z-index:5;font-size:15px;color:#7E90B8;opacity:0;transition:opacity .4s}
+#tip.on{opacity:.9}
+</style>
+<link rel="stylesheet" href="css/clips.css">
+<link rel="stylesheet" href="css/ep4.css">
+<link rel="stylesheet" href="css/ep5.css">
+<link rel="stylesheet" href="css/ep6.css">
+<link rel="stylesheet" href="css/ep7.css">
+<link rel="stylesheet" href="css/ep8.css">
+<link rel="stylesheet" href="css/ep9.css">
+<link rel="stylesheet" href="css/ep_k.css">
+</head>
+<body>
+<div id="wrap"><div id="stage">
+  <canvas id="gl" width="1600" height="900"></canvas>
+  <div id="labels"></div>
+  <div id="scene"></div>
+  <div id="tip">🖱 드래그하면 뇌를 돌려 볼 수 있어요</div>
+  <div id="cap"></div>
+  <div id="endov"></div>
+  <div id="menu"></div>
+</div></div>
+<div id="ctrl">
+  <div id="bar"><div class="trk"></div><div class="hov"></div><div class="prog"></div><div id="ticks"></div><div class="knob"></div><div class="tipx"><b></b><span></span></div></div>
+  <div class="rw">
+    <button id="cPlay" title="재생/일시정지 (Space)"></button>
+    <button id="cPrev" title="이전 대사 (←)"><svg viewBox="0 0 24 24"><path d="M6 6h2v12H6zm3.5 6 8.5 6V6z"/></svg></button>
+    <button id="cNext" title="다음 대사 (→)"><svg viewBox="0 0 24 24"><path d="M6 18l8.5-6L6 6v12zM16 6v12h2V6h-2z"/></svg></button>
+    <button id="cVol" title="소리 끄기/켜기 (M)"></button>
+    <span class="time" id="cTime">0:00 / 0:00</span>
+    <span class="ttl2" id="cTitle"></span>
+    <span class="sp"></span>
+    <button id="cSpd" title="재생 속도">1x</button>
+    <button id="cMenu" title="목록 (Esc)"><svg viewBox="0 0 24 24"><path d="M3 6h18v2H3zm0 5h18v2H3zm0 5h18v2H3z"/></svg></button>
+    <button id="cFs" title="전체화면 (F)"><svg viewBox="0 0 24 24"><path d="M7 14H5v5h5v-2H7zm-2-4h2V7h3V5H5zm12 7h-3v2h5v-5h-2zM14 5v2h3v3h2V5z"/></svg></button>
+  </div>
+  <div id="spdMenu"></div>
+</div>
+<div id="hud">
+  <span class="pos" id="pos"></span>
+  <button id="bMenu" title="목록 (Esc)">☰ 목록</button>
+  <button id="bRe" title="처음부터 (R)">⏮</button>
+  <button id="bPrev" title="이전 대사 (←)">◀</button>
+  <button id="bPlay" title="일시정지/재생 (Space)">⏯</button>
+  <button id="bNext" title="다음 대사 (→)">▶</button>
+  <button id="bFs" title="전체화면 (F)">⛶</button>
+</div>
+<script src="lib/three.min.js"></script>
+<script src="js/brain_data.js"></script>
+<script src="js/world3d.js"></script>
+<script>
+/* =========================================================
+   재생 엔진 (대사 단위 진행, 음성, 효과음, 메뉴)
+   - 음성: audio/<대사ID>.mp3 또는 .wav가 있으면 사용, 없으면 브라우저 한국어 음성(임시)
+   ========================================================= */
+const SPK = { N:{name:'내레이션', pitch:1.0, rate:1.05} };
+const stage=document.getElementById('stage'), scene=document.getElementById('scene'), cap=document.getElementById('cap'), endov=document.getElementById('endov'), menu=document.getElementById('menu');
+let S={}, INSTANT=false, RUN=null, CUR={ci:-1,si:0}, paused=false, playAll=false, CURA=null;
+const CLIPS=[];
+window.ENGINE={ instant:()=>INSTANT, paused:()=>paused };
+
+function fit(){ const s=Math.min(innerWidth/1600, innerHeight/900); stage.style.transform=`scale(${s})`; }
+addEventListener('resize', fit); fit();
+
+const $=s=>stage.querySelector(s);
+const $$=s=>[...stage.querySelectorAll(s)];
+function add(html){ scene.insertAdjacentHTML('beforeend', html); }
+function on(sel, v=true){ $$(sel).forEach(e=>e.classList.toggle('on', v)); }
+function only(group, sel){ $$(group).forEach(e=>e.classList.remove('on')); if(sel) on(sel); }
+function later(fn, ms){ if(INSTANT) return fn(); const tk=RUN; setTimeout(()=>{ if(RUN===tk) fn(); }, ms); }
+function seq(fns, gap){ fns.forEach((f,i)=>later(f, i*gap)); }
+function hdr(k,t,id='hd'){ return `<div class="hdr fade on" id="${id}"><div class="kicker">${k}</div><div class="ttl">${t}</div></div>`; }
+function tip(v){ document.getElementById('tip').classList.toggle('on', v); }
+
+/* ---------- 효과음 (Web Audio) ---------- */
+let AC=null, MASTER=null;
+function ac(){ if(!AC){ AC=new (window.AudioContext||window.webkitAudioContext)(); MASTER=AC.createGain(); MASTER.gain.value=0.8; MASTER.connect(AC.destination);} if(AC.state==='suspended') AC.resume(); return AC; }
+function tone(f,t0,dur,type='sine',vol=.2,f2){ const c=ac(), o=c.createOscillator(), g=c.createGain(); o.type=type; o.frequency.setValueAtTime(f,t0); if(f2) o.frequency.exponentialRampToValueAtTime(f2,t0+dur); g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(vol,t0+0.012); g.gain.exponentialRampToValueAtTime(0.0001,t0+dur); o.connect(g).connect(MASTER); o.start(t0); o.stop(t0+dur+0.05); }
+function noise(t0,dur,f1,f2,vol=.25){ const c=ac(), n=Math.floor(c.sampleRate*dur), buf=c.createBuffer(1,n,c.sampleRate), d=buf.getChannelData(0); for(let i=0;i<n;i++) d[i]=Math.random()*2-1; const src=c.createBufferSource(); src.buffer=buf; const bp=c.createBiquadFilter(); bp.type='bandpass'; bp.Q.value=1.2; bp.frequency.setValueAtTime(f1,t0); bp.frequency.exponentialRampToValueAtTime(f2,t0+dur); const g=c.createGain(); g.gain.setValueAtTime(0.0001,t0); g.gain.exponentialRampToValueAtTime(vol,t0+dur*0.4); g.gain.exponentialRampToValueAtTime(0.0001,t0+dur); src.connect(bp).connect(g).connect(MASTER); src.start(t0); src.stop(t0+dur+0.02); }
+const SFX={
+  ding(){ const t=ac().currentTime; tone(1046.5,t,.7,'sine',.2); tone(1568,t+.07,.8,'sine',.12); },
+  pop(){ const t=ac().currentTime; tone(520,t,.12,'sine',.14,1040); },
+  whoosh(){ noise(ac().currentTime,.5,300,2600,.2); },
+  glow(){ const t=ac().currentTime; tone(392,t,.9,'sine',.07,784); tone(587,t+.05,.9,'sine',.05,1174); },
+  zap(){ const t=ac().currentTime; tone(880,t,.08,'square',.05,1760); tone(1320,t+.06,.1,'square',.04,2400); },
+  bad(){ const t=ac().currentTime; tone(220,t,.25,'sawtooth',.07,150); tone(180,t+.12,.3,'sawtooth',.06,120); },
+  cut(){ const t=ac().currentTime; noise(t,.18,2500,6000,.25); tone(300,t+.05,.25,'triangle',.1,120); },
+  ok(){ const t=ac().currentTime; tone(784,t,.3,'sine',.18); tone(1046.5,t+.16,.55,'sine',.18); },
+  tick(){ const t=ac().currentTime; tone(1500,t,.04,'square',.03); },
+  levelup(){ const t=ac().currentTime; [523.25,659.25,783.99,1046.5].forEach((f,i)=>tone(f,t+i*.09,.32,'triangle',.12)); },
+};
+function sfx(name){ if(INSTANT||!name) return; try{ SFX[name]&&SFX[name](); }catch(e){} }
+
+/* ---------- 음성 ---------- */
+let KO=null;
+function pickVoice(){ const v=speechSynthesis.getVoices().filter(x=>x.lang&&x.lang.toLowerCase().startsWith('ko')); KO=v.find(x=>/natural|online/i.test(x.name))||v[0]||null; }
+if(window.speechSynthesis){ pickVoice(); speechSynthesis.onvoiceschanged=pickVoice; }
+function plain(t){ return t.replace(/<[^>]+>/g,''); }
+function stopAudio(){ if(CURA&&CURA.a){ CURA.a.onended=null; CURA.a.onerror=null; try{CURA.a.pause();}catch(e){} } CURA=null; if(window.speechSynthesis) speechSynthesis.cancel(); }
+/* 확인 문제(문제·해설) 대사는 음성 없이 자막만 보여 줌 */
+const SILENT=id=>/(^|_)q[^-]*-[qa]$/.test(id||'');
+function speak(step){
+  return new Promise(resolve=>{
+    let fin=false; const done=()=>{ if(fin) return; fin=true; resolve(); };
+    if(SILENT(step.id)){ const tk=RUN; CURA={tts:true, done}; waitMs(Math.max(3000, plain(step.say||step.t).length*150), tk).then(done); return; }
+    const exts=['mp3','wav']; let k=0;
+    const tts=()=>{
+      const txt=step.say||plain(step.t);
+      const est=Math.max(2500, txt.length*200)+4000;
+      if(!window.speechSynthesis||!KO){ const tk=RUN; waitMs(Math.max(2200, txt.length*165), tk).then(done); return; }
+      const u=new SpeechSynthesisUtterance(txt); u.lang='ko-KR'; u.voice=KO; u.rate=SPK.N.rate*SPEED; u.pitch=SPK.N.pitch; u.volume=MUTED?0:1;
+      const t0=performance.now(), minD=(txt.length*120+500)/SPEED;
+      const fin2=()=>{ const el=performance.now()-t0; if(el<minD*0.5) setTimeout(done, minD-el); else done(); };
+      u.onend=fin2; u.onerror=fin2; CURA={tts:true, done};
+      speechSynthesis.cancel(); speechSynthesis.speak(u);
+      setTimeout(done, est);
+    };
+    const tryA=()=>{ if(k>=exts.length) return tts(); const a=new Audio(`audio/${step.id}.${exts[k++]}`); a.playbackRate=SPEED; a.muted=MUTED; a.preservesPitch=true; CURA={a,done}; a.onloadedmetadata=()=>{ if(AUD[step.id]!==a.duration){ AUD[step.id]=a.duration; buildTimeline(CUR.ci); } }; a.onended=done; a.onerror=()=>{ if(!fin) tryA(); }; a.play().catch(err=>{ if(fin||!err||err.name!=='NotAllowedError') return; const tk=RUN; const go=()=>waitMs(Math.max(2500,((a.duration||0)*1000)||plain(step.say||step.t).length*150), tk).then(done); if(a.readyState>=1) go(); else a.addEventListener('loadedmetadata',go,{once:true}); }); };
+    tryA();
+  });
+}
+function caption(step){ cap.innerHTML=`<span class="n">내레이션</span>${step.t}`; cap.classList.add('on'); }
+
+/* ---------- 엔진 ---------- */
+function applyStart(step){
+  if(step.clear) cap.classList.remove('on');
+  step.do && step.do(S);
+  if(step.id){ caption(step); sfx(step.sfx); }
+  else if(step.sfx) sfx(step.sfx);
+}
+function waitMs(ms, tk){ return new Promise(res=>{ let left=ms; const it=setInterval(()=>{ if(RUN!==tk){clearInterval(it);res();return;} if(!paused) left-=50*SPEED; if(left<=0){clearInterval(it);res();} },50); }); }
+async function waitPause(tk){ while(paused && RUN===tk) await waitMs(100, tk); }
+function build(ci){
+  stopAudio(); cap.classList.remove('on'); endov.classList.remove('on');
+  scene.innerHTML=''; tip(false); S={};
+  W.reset();
+  CLIPS[ci].build(S);
+}
+async function playClip(ci, start=0){
+  const tk={}; RUN=tk; paused=false; stage.classList.remove('paused'); menu.classList.remove('on'); document.body.classList.add('playing'); document.body.classList.remove('paused'); updPlayIcon();
+  const clip=CLIPS[ci]; probeAudio(ci); buildTimeline(ci);
+  stage.classList.add('instant'); INSTANT=true;
+  build(ci);
+  for(let i=0;i<start;i++){ const st=clip.steps[i]; applyStart(st); st.after && st.after(S); }
+  W.snap();
+  INSTANT=false;
+  requestAnimationFrame(()=>requestAnimationFrame(()=>stage.classList.remove('instant')));
+  for(let i=start;i<clip.steps.length;i++){
+    if(RUN!==tk) return;
+    CUR={ci, si:i}; STEP_EL=0; updPos();
+    await waitPause(tk); if(RUN!==tk) return;
+    const st=clip.steps[i];
+    applyStart(st);
+    if(st.id){ await waitMs(200, tk); if(RUN!==tk) return; await speak(st); }
+    else { let w=st.wait||600; if(playAll && i===clip.steps.length-1 && ci<CLIPS.length-1) w=Math.min(w,400); await waitMs(w, tk); }
+    if(RUN!==tk) return;
+    st.after && st.after(S);
+    await waitMs(st.gap ?? (st.id?450:0), tk);
+  }
+  if(RUN!==tk) return;
+  CUR={ci, si:clip.steps.length}; STEP_EL=0; updPos();
+  if(playAll && ci<CLIPS.length-1){ await waitMs(300, tk); if(RUN===tk) playClip(ci+1); return; }
+  showEnd(ci);
+}
+function showEnd(ci){
+  endov.innerHTML=(ci<CLIPS.length-1?`<button id="eNext">다음: ${CLIPS[ci+1].short} ▶</button>`:'')+`<button class="ghost" id="eRe">다시 보기</button><button class="ghost" id="eMenu">목록</button>`;
+  endov.classList.add('on');
+  const n=document.getElementById('eNext'); if(n) n.onclick=()=>playClip(ci+1);
+  document.getElementById('eRe').onclick=()=>playClip(ci);
+  document.getElementById('eMenu').onclick=showMenu;
+}
+function updPos(){ const c=CLIPS[CUR.ci]; document.getElementById('cTitle').textContent=c?`· ${c.title}`:''; }
+function togglePause(){
+  if(CUR.ci<0) return; paused=!paused; stage.classList.toggle('paused', paused); document.body.classList.toggle('paused', paused); updPlayIcon();
+  if(CURA){ if(CURA.a){ paused?CURA.a.pause():CURA.a.play().catch(()=>{}); } else if(window.speechSynthesis){ paused?speechSynthesis.pause():speechSynthesis.resume(); } }
+}
+function go(delta){ if(CUR.ci<0) return; const c=CLIPS[CUR.ci]; const t=Math.max(0, Math.min(c.steps.length-1, CUR.si+delta)); playClip(CUR.ci, t); }
+const ROADMAP=[
+  ['0','오프닝','말산출 4단계와 장애 지도'],['1-1','신경해부생리 ① 뇌의 구조','뉴런 · 대뇌 4엽 · 브로드만 · 기저핵 · 뇌간'],
+  ['1-2','신경해부생리 ② 뇌신경 · 운동경로','12쌍 · 추체로/추체외로 · UMN/LMN'],['1-3','신경해부생리 ③ 뇌혈관','ACA · MCA · PCA · 뇌졸중'],
+  ['2-1','실어증 ① 유형과 증상','감별 트리 · 8유형 병소 · 착어 · 빈출 증상'],['2-2','실어증 ② 평가 · 예후 · 치료','K-WAB · 유형 변화 · MIT · VAT · PACE'],['3','실독증 · 실서증','이중경로 읽기 모형 · 실독증 6유형 · 실서증'],
+  ['4-1','마비말장애 ① 신경기전 · 유형','UMN · LMN · 여섯 유형'],['4-2','마비말장애 ② 평가 · 치료','평가 프로파일 · 하위체계별 치료'],['5','말실행증','특성 · 감별 · 8단계 연속법'],
+  ['6','삼킴장애','4단계 · 침습/흡인 · 자세법'],['7','치매','AD · FTD · PPA · 평가와 치료'],
+  ['8-1','우반구 손상','무시 · 운율 · 화용 · 담화'],['8-2','외상성 뇌손상','손상기전 · GCS · PTA · 재활'],['9','뇌성마비 · 기타 신경말장애','CP 유형 · 말더듬 · 함구증'],['K','최신 기출 포인트','2024·2025 신경언어장애 60문항']
+];
+function showMenu(){
+  RUN={}; stopAudio(); playAll=false; document.body.classList.remove('playing','paused'); endov.classList.remove('on'); cap.classList.remove('on'); CUR={ci:-1,si:0}; updPos(); tip(false);
+  W.reset(); W.show({brain:true}); W.brain({lobe:[0.55,0.55,0.55,0.55]}); W.view('front3q',0); W.spin(0.18); W.shift(330); W.snap();
+  const ready=Object.fromEntries(CLIPS.map((c,i)=>[c.code,i]));
+  menu.innerHTML=`<h1>신경언어장애 3D 애니메이션 강의</h1>
+   <div class="sub">언어재활사 2급 국가시험 대비 · 신경언어장애 정리 + 국시 특강(Part 1·2) + 언어기관의 해부와 생리(4판) 보충</div>
+   <div class="grid">
+    <div class="card all" data-all="1"><div class="k">전체 재생</div><div class="t">완성된 편 이어서 재생</div><div class="d">${CLIPS.length}편 · 시험판</div></div>
+    ${ROADMAP.map(([code,t,d])=> code in ready ? `<div class="card" data-i="${ready[code]}"><div class="k">${code==='0'?'OPENING':'EP '+code}</div><div class="t">${t}</div><div class="d">${CLIPS[ready[code]].desc}</div></div>` : `<div class="card soon"><div class="k">EP ${code} · 준비 중</div><div class="t">${t}</div><div class="d">${d}</div></div>`).join('')}
+   </div>
+   <div class="foot">조작: Space 일시정지 · ←/→ 이전/다음 대사 · &lt; / &gt; 배속 · R 처음부터 · Esc 목록 · F 전체화면 · 아래쪽 막대를 끌면 원하는 장면으로 이동 · 3D 장면은 마우스로 드래그해 돌려 볼 수 있어요<br>음성: audio 폴더에 대사 음성 파일이 있으면 자동 사용, 없으면 브라우저 기본 한국어 음성(임시)으로 재생됩니다. · 비상업적 개인 학습용</div>`;
+  menu.classList.add('on');
+  menu.querySelectorAll('.card[data-i],.card.all').forEach(c=>c.onclick=()=>{ ac(); if(c.dataset.all){ playAll=true; playClip(0);} else { playAll=false; playClip(+c.dataset.i);} });
+}
+document.getElementById('bMenu').onclick=showMenu;
+document.getElementById('bRe').onclick=()=>{ if(CUR.ci>=0) playClip(CUR.ci); };
+document.getElementById('bPrev').onclick=()=>go(-1);
+document.getElementById('bNext').onclick=()=>go(1);
+document.getElementById('bPlay').onclick=togglePause;
+document.getElementById('bFs').onclick=()=>{ document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen(); };
+addEventListener('keydown', e=>{
+  if(e.key===' '){ e.preventDefault(); togglePause(); }
+  else if(e.key==='ArrowRight'||e.key==='PageDown') go(1);
+  else if(e.key==='ArrowLeft'||e.key==='PageUp') go(-1);
+  else if(e.key==='Escape'||e.key==='m'||e.key==='M') showMenu();
+  else if(e.key==='r'||e.key==='R'){ if(CUR.ci>=0) playClip(CUR.ci); }
+  else if(e.key==='f'||e.key==='F') document.getElementById('cFs').click();
+  else if(e.key==='>'||e.key==='.'){ const i=SPEEDS.indexOf(SPEED); setSpeed(SPEEDS[Math.min(SPEEDS.length-1,i+1)]); }
+  else if(e.key==='<'||e.key===','){ const i=SPEEDS.indexOf(SPEED); setSpeed(SPEEDS[Math.max(0,i-1)]); }
+});
+let mt; addEventListener('mousemove',()=>{ document.body.classList.add('mouse'); clearTimeout(mt); mt=setTimeout(()=>document.body.classList.remove('mouse'),2200); });
+
+/* ---------- 퀴즈 도우미 ---------- */
+/* ---------- 플레이어: 재생 시간 · 탐색 바 · 배속 ---------- */
+const LS={ get(k){ try{ return localStorage.getItem(k); }catch(e){ return null; } }, set(k,v){ try{ localStorage.setItem(k,v); }catch(e){} } };
+let SPEED=+(LS.get('neuroSpeed')||1), MUTED=LS.get('neuroMute')==='1', STEP_EL=0;
+const AUD={};
+const SPEEDS=[1,1.2,1.5,1.7,2];
+const IC={play:'<svg viewBox="0 0 24 24"><path d="M8 5v14l11-7z"/></svg>', pause:'<svg viewBox="0 0 24 24"><path d="M6 5h4v14H6zm8 0h4v14h-4z"/></svg>',
+  vol:'<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.5 3A4.5 4.5 0 0 0 14 8v8a4.5 4.5 0 0 0 2.5-4zM14 3.2v2.1a7 7 0 0 1 0 13.4v2.1A9 9 0 0 0 14 3.2z"/></svg>',
+  mute:'<svg viewBox="0 0 24 24"><path d="M3 9v6h4l5 5V4L7 9H3zm13.6 3 2.7-2.7-1.4-1.4L15.2 10.6 12.5 7.9l-1.4 1.4L13.8 12l-2.7 2.7 1.4 1.4 2.7-2.7 2.7 2.7 1.4-1.4z"/></svg>'};
+function estDur(s){ if(s.id){ const a=SILENT(s.id)?null:AUD[s.id]; const sp=(a!=null&&a>0)?a:Math.max(3,plain(s.say||s.t).length*0.15); return 0.2+sp+((s.gap??450)/1000); } return (s.wait||600)/1000+((s.gap??0)/1000); }
+function buildTimeline(ci){ const c=CLIPS[ci]; if(!c) return; let t=0; c._st=c.steps.map(s=>{ const st=t; t+=estDur(s); return st; }); c._total=t; }
+function probeAudio(ci){ const c=CLIPS[ci]; c.steps.forEach(s=>{ if(!s.id||s.id in AUD||SILENT(s.id)) return; AUD[s.id]=null; const a=new Audio(); a.preload='metadata'; a.onloadedmetadata=()=>{ AUD[s.id]=a.duration; buildTimeline(ci); }; a.onerror=()=>{ const b=new Audio(); b.preload='metadata'; b.onloadedmetadata=()=>{ AUD[s.id]=b.duration; buildTimeline(ci); }; b.src='audio/'+s.id+'.wav'; }; a.src='audio/'+s.id+'.mp3'; }); }
+const fmt=t=>{ t=Math.max(0,Math.round(t)); const m=Math.floor(t/60), s=t%60; return m+':'+String(s).padStart(2,'0'); };
+function curTime(){ const c=CLIPS[CUR.ci]; if(!c||!c._st) return 0; if(CUR.si>=c.steps.length) return c._total; return c._st[CUR.si]+Math.min(STEP_EL, estDur(c.steps[CUR.si])); }
+function updPlayIcon(){ document.getElementById('cPlay').innerHTML = paused?IC.play:IC.pause; }
+function updVol(){ document.getElementById('cVol').innerHTML = MUTED?IC.mute:IC.vol; if(MASTER) MASTER.gain.value=MUTED?0:0.8; if(CURA&&CURA.a) CURA.a.muted=MUTED; }
+function setSpeed(v){ SPEED=v; LS.set('neuroSpeed',v); document.getElementById('cSpd').textContent=(v===1?'1':v)+'x'; if(CURA&&CURA.a) CURA.a.playbackRate=v; renderSpd(); const q=document.querySelector('.quiz.run'); }
+function renderSpd(){ const m=document.getElementById('spdMenu'); m.innerHTML='<div class="h">재생 속도</div>'+SPEEDS.map(v=>`<div data-v="${v}" class="${v===SPEED?'sel':''}"><span>${v===1?'보통 (1x)':v+'x'}</span><span>${v===SPEED?'✓':''}</span></div>`).join(''); m.querySelectorAll('[data-v]').forEach(d=>d.onclick=(e)=>{ e.stopPropagation(); setSpeed(+d.dataset.v); m.classList.remove('on'); }); }
+(function initPlayer(){
+  const bar=document.getElementById('bar'), prog=bar.querySelector('.prog'), knob=bar.querySelector('.knob'), hov=bar.querySelector('.hov'), tipx=bar.querySelector('.tipx');
+  let dragging=false, dragT=0, lastNow=performance.now();
+  const tAt=(clientX)=>{ const r=bar.getBoundingClientRect(); const c=CLIPS[CUR.ci]; const f=Math.min(1,Math.max(0,(clientX-r.left)/r.width)); return {f, t:f*(c?c._total:0)}; };
+  const idxAt=(t)=>{ const c=CLIPS[CUR.ci]; let i=0; for(let k=0;k<c._st.length;k++){ if(c._st[k]<=t) i=k; else break; } return i; };
+  const preview=(clientX)=>{ const c=CLIPS[CUR.ci]; if(!c||!c._st) return; const {f,t}=tAt(clientX); hov.style.width=(f*100)+'%'; const i=idxAt(t); let j=i; while(j<c.steps.length && !c.steps[j].id) j++; const s=c.steps[Math.min(j,c.steps.length-1)];
+    const txt=s&&s.id?plain(s.t):''; tipx.querySelector('b').textContent=fmt(t)+(s&&s.id?'  ·  '+s.id:''); tipx.querySelector('span').textContent=txt.length>70?txt.slice(0,70)+'…':txt;
+    const r=bar.getBoundingClientRect(); tipx.style.left=Math.min(r.width-150,Math.max(150,f*r.width))+'px'; return {f,t,i}; };
+  bar.addEventListener('pointermove', e=>{ const p=preview(e.clientX); if(dragging&&p){ dragT=p.t; prog.style.width=(p.f*100)+'%'; knob.style.left=(p.f*100)+'%'; } });
+  bar.addEventListener('pointerdown', e=>{ if(CUR.ci<0) return; dragging=true; bar.classList.add('drag'); bar.setPointerCapture(e.pointerId); const p=preview(e.clientX); dragT=p.t; prog.style.width=(p.f*100)+'%'; knob.style.left=(p.f*100)+'%'; });
+  bar.addEventListener('pointerup', e=>{ if(!dragging) return; dragging=false; bar.classList.remove('drag'); const i=idxAt(dragT); const wasPaused=paused; playClip(CUR.ci, i); if(wasPaused) setTimeout(togglePause,60); });
+  document.getElementById('cPlay').onclick=togglePause;
+  document.getElementById('cPrev').onclick=()=>go(-1);
+  document.getElementById('cNext').onclick=()=>go(1);
+  document.getElementById('cMenu').onclick=showMenu;
+  document.getElementById('cFs').onclick=()=>{ document.fullscreenElement?document.exitFullscreen():document.documentElement.requestFullscreen(); };
+  document.getElementById('cVol').onclick=()=>{ MUTED=!MUTED; LS.set('neuroMute',MUTED?'1':'0'); updVol(); };
+  document.getElementById('cSpd').onclick=(e)=>{ e.stopPropagation(); renderSpd(); document.getElementById('spdMenu').classList.toggle('on'); };
+  addEventListener('click',()=>document.getElementById('spdMenu').classList.remove('on'));
+  setSpeed(SPEEDS.includes(SPEED)?SPEED:1); updPlayIcon(); updVol();
+  (function loop(now){ requestAnimationFrame(loop); const dt=(now-lastNow)/1000; lastNow=now; const c=CLIPS[CUR.ci];
+    if(!c||!c._st) return; if(!paused && RUN && CUR.si<c.steps.length) STEP_EL+=dt*SPEED;
+    const t=curTime(), tot=c._total||1; document.getElementById('cTime').textContent=fmt(t)+' / '+fmt(tot);
+    if(!dragging){ const f=Math.min(1,t/tot); prog.style.width=(f*100)+'%'; knob.style.left=(f*100)+'%'; } })(lastNow);
+})();
+function quizHTML(id, o){
+  return `<div class="glass quiz fade ${o.compact?'compact':''}" id="${id}" style="--d:${(o.sec||8)}s">
+    <div class="qh"><span class="tag ${o.kind==='기출'?'':'k'}">${o.kind||'확인 문제'}</span></div>
+    <svg class="cd" viewBox="0 0 66 66"><circle class="bg" cx="33" cy="33" r="30"/><circle class="fg" cx="33" cy="33" r="30"/></svg>
+    <div class="q">${o.q}</div>${o.box?`<div class="box">${o.box}</div>`:''}
+    <div class="ops">${o.opts.map((x,i)=>`<div class="op" data-i="${i}">${'①②③④⑤'[i]} ${x}</div>`).join('')}</div></div>`;
+}
+function quizSteps(id, o, pre){
+  return [
+    {id:id+'-q', s:'N', t:o.say||o.q, do(S){ $$('.quiz').forEach(e=>e.classList.remove('on')); pre&&pre(S); on('#'+id); sfx('pop'); }},
+    {wait:(o.sec||8)*1000, do(){ const q=$('#'+id); q.style.setProperty('--d', ((o.sec||8)/SPEED)+'s'); q.classList.add('run'); }},
+    {id:id+'-a', s:'N', t:o.ex, do(){ $$(`#${id} .op`).forEach(e=>e.classList.add(+e.dataset.i===o.ans?'ok':'no')); sfx('ok'); }},
+  ];
+}</script>
+<script src="js/clips.js"></script>
+<script src="js/clips_1_2.js"></script>
+<script src="js/clips_1_3.js"></script>
+<script src="js/clips_2_1.js"></script>
+<script src="js/clips_2_2.js"></script>
+<script src="js/clips_3.js"></script>
+<script src="js/clips_4.js"></script>
+<script src="js/clips_5.js"></script>
+<script src="js/clips_6.js"></script>
+<script src="js/clips_7.js"></script>
+<script src="js/clips_8.js"></script>
+<script src="js/clips_9.js"></script>
+<script src="js/clips_k.js"></script>
+<script>
+W.init(document.getElementById('gl'), document.getElementById('labels'));
+showMenu();
+window.DBG={ show(ci, si){ RUN={}; menu.classList.remove('on'); stage.classList.add('instant'); INSTANT=true; build(ci); const c=CLIPS[ci]; for(let i=0;i<=si && i<c.steps.length;i++){ applyStart(c.steps[i]); if(i<si) c.steps[i].after&&c.steps[i].after(S);} W.snap(); INSTANT=false; stopAudio(); setTimeout(()=>stage.classList.remove('instant'),50); } };
+</script>
+</body>
+</html>
