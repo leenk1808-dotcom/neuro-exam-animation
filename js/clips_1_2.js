@@ -65,7 +65,35 @@ CLIPS.push({ code:'1-2', short:'1-2 뇌신경·운동경로', title:'신경해�
       <div class="row"><b class="hl-y">추체로</b> · 직접 활성화 경로<br><span style="font-size:19px">수의적 · 섬세한 움직임 · 시냅스 없이 직행</span></div>
       <div class="row" style="margin-top:10px"><b style="color:#C58BFF">추체외로</b> · 간접 활성화 경로<br><span style="font-size:19px">자세 · 근긴장 · 속도·범위 조절 · 동작을 시작하지는 않음</span></div>
       <div class="row fade" id="typ2" style="margin-top:14px;font-size:20px">⌨️ 타자 칠 때 손가락의 섬세한 움직임 = 추체로<br>그동안 팔·어깨 자세 유지 = 추체외로</div></div>`);
-    add(`<div class="glass cmp2 fade" id="ul"><table>
+    add(`<div id="r12face" class="r12face fade">
+      <div class="r12f-title"><b>뇌신경 얼굴 지도</b><small>감각 입력 · 표정 · 씹기 · 발성 · 삼킴</small></div>
+      <div class="r12f-photo-frame"><img class="r12f-photo" src="img/rev12_face.webp" alt="정면 얼굴 뇌신경 지도">
+        <div class="r12f-mark eyeL"><b>II</b><small>시각</small></div><div class="r12f-mark eyeR"><b>III · IV · VI</b><small>눈 움직임</small></div>
+        <div class="r12f-mark nose"><b>I</b><small>후각</small></div>
+        <div class="r12f-mark sensory"><b>V</b><small>얼굴 감각</small></div>
+        <div class="r12f-mark jaw"><b>V</b><small>저작근</small></div>
+        <div class="r12f-mark lips"><b>VII</b><small>표정 · 입술</small></div>
+        <div class="r12f-mark ear"><b>VIII</b><small>청각 · 평형</small></div>
+        <div class="r12f-mark throat"><b>IX · X</b><small>인두 · 후두</small></div>
+        <div class="r12f-mark tongue"><b>XII</b><small>혀 운동</small></div>
+        <div class="r12f-mark neck"><b>XI</b><small>목 · 어깨</small></div>
+        <div class="r12f-branch"></div><div class="r12f-mouth-inset"><b>구강 기능 연결</b><span>V 앞혀 일반감각 · VII 앞혀 미각</span><span>IX 뒤혀 감각·미각 / 인두</span><span>X 발성·삼킴 · XII 혀 운동</span></div>
+      </div>
+      <svg class="r12f-svg" viewBox="0 0 1600 900" aria-hidden="true">
+        <ellipse class="r12f-zone v" cx="385" cy="385" rx="115" ry="168"/><ellipse class="r12f-zone v" cx="650" cy="385" rx="115" ry="168"/>
+        <path class="r12f-line v" d="M510 423 Q450 460 380 520 M510 423 Q575 460 650 520 M510 423 Q510 500 510 550"/>
+        <ellipse class="r12f-zone vii" cx="385" cy="255" rx="100" ry="54"/><ellipse class="r12f-zone vii" cx="650" cy="255" rx="100" ry="54"/>
+        <path class="r12f-line vii" d="M510 385 Q450 310 380 255 M510 385 Q575 310 650 255 M510 385 Q510 480 510 520"/>
+        <ellipse class="r12f-zone eye" cx="385" cy="315" rx="90" ry="38"/><ellipse class="r12f-zone eye" cx="650" cy="315" rx="90" ry="38"/><circle class="r12f-zone nose" cx="510" cy="390" r="42"/>
+        <path class="r12f-line xi" d="M510 620 Q485 730 410 810 M510 620 Q545 730 650 810"/><path class="r12f-line xii" d="M510 530 Q510 585 510 640"/>
+        <path class="r12f-line ix" d="M510 535 Q690 585 850 610"/><path class="r12f-line x" d="M510 535 Q680 650 850 690"/>
+      </svg>
+      <div class="r12f-tag" style="left:160px;top:290px;--c:#5EE0A8">I · 후각</div><div class="r12f-tag" style="left:710px;top:270px;--c:#5EE0A8">II · 시각</div>
+      <div class="r12f-tag" style="left:90px;top:420px;--c:#8EC5FF">V · 얼굴 감각</div><div class="r12f-tag" style="left:720px;top:420px;--c:#8EC5FF">V · 씹기</div>
+      <div class="r12f-tag" style="left:180px;top:185px;--c:#FF7BA8">III · IV · VI · 눈운동</div><div class="r12f-tag" style="left:710px;top:335px;--c:#FFD25E">VII · 표정 · 입술</div>
+      <div class="r12f-card glass" id="r12f-card"><h3>말·삼킴에서 꼭 볼 신경</h3><div><b style="color:#8EC5FF">V 삼차</b> 얼굴·구강 감각, 턱 저작</div><div><b style="color:#FFD25E">VII 안면</b> 입술 조음·표정, 앞 2/3 미각</div><div><b style="color:#FF9AC2">IX 설인</b> 뒤 1/3 감각·미각, 인두 감각·운동</div><div><b style="color:#FF795F">X 미주</b> 연구개·인두·후두 운동, 발성·공명·삼킴</div><div><b style="color:#C58BFF">XI 부신경</b> 목 돌림·어깨 들기</div><div><b style="color:#5FD3F0">XII 설하</b> 혀 운동·조음</div></div>
+      <div class="r12f-inset"><b>구강·인두 기능 지도</b><span style="--c:#FFD25E">VII 앞혀 미각</span><span style="--c:#8EC5FF">V 앞혀 일반감각</span><span style="--c:#FF9AC2">IX 뒤혀·인두 감각 / 인두 운동</span><span style="--c:#FF795F">X 연구개·인두·후두 운동</span><span style="--c:#5FD3F0">XII 혀 운동</span></div>
+    </div>`);    add(`<div class="glass cmp2 fade" id="ul"><table>
       <tr><th></th><th class="u cu">UMN 상부운동신경원</th><th class="l cl">LMN 하부운동신경원</th></tr>
       <tr><td>위치</td><td class="u">중추신경계<br>피질 → 뇌간·척수</td><td class="l">말초신경계<br>뇌신경 · 척수신경</td></tr>
       <tr><td>근긴장</td><td class="u">증가 (경직)</td><td class="l">저하 (이완)</td></tr>
@@ -156,6 +184,13 @@ CLIPS.push({ code:'1-2', short:'1-2 뇌신경·운동경로', title:'신경해�
     {id:'2-21', s:'N', t:'말과 관련된 뇌신경을 정리하면, 발성은 10번, 조음은 5번, 7번, 10번, 12번, 공명은 10번이 중심이고 9번이 돕습니다. 말 호흡은 횡격신경 같은 척수신경이 주로 담당합니다.',
       do(S){ on('#tg',false); S.cnHi([5,7,9,10,12]); later(()=>{ on('#sp'); sfx('pop'); },400); }},
     {id:'2-22', s:'N', t:'그래서 말 산출에 관여하는 뇌신경 6쌍은 5번, 7번, 9번, 10번, 11번, 12번입니다.', do(S){ S.cnHi([5,7,9,10,11,12]); on('#sp2'); sfx('ding'); }},
+    /* B-1. 얼굴·머리 뇌신경 지도 */
+    {id:'2-22a',s:'N',t:'이제 얼굴 그림에서 뇌신경이 맡는 부위를 연결해 보겠습니다. 화면의 좌우 영역은 기능을 이해하기 위한 지도이며, 실제 신경 가지가 피부 위에 이렇게 그려져 있다는 뜻은 아닙니다.',say:'이제 얼굴 그림에서 뇌신경이 맡는 부위를 연결해 보겠습니다. 화면의 좌우 영역은 기능을 이해하기 위한 지도이며, 실제 신경 가지가 피부 위에 이렇게 그려져 있다는 뜻은 아닙니다.',do(){on('#sp',false);on('#r12face');zoom(470,410,1.12,900);sfx('whoosh');}},
+    {id:'2-22b',s:'N',t:'삼차신경 5번은 얼굴과 치아, 혀 앞쪽의 일반 감각을 전달합니다. 턱 근육도 움직여 저작을 돕습니다. 안면신경 7번은 표정근육을 움직여 눈을 감고 입술을 오므리게 하므로 입술 조음에도 중요합니다.',say:'삼차신경 오번은 얼굴과 치아, 혀 앞쪽의 일반 감각을 전달합니다. 턱 근육도 움직여 저작을 돕습니다. 안면신경 칠번은 표정근육을 움직여 눈을 감고 입술을 오므리게 하므로 입술 조음에도 중요합니다.',do(){zoom(500,400,1.24,1000);sfx('glow');}},
+    {id:'2-22c',s:'N',t:'눈의 움직임은 3번, 4번, 6번이 함께 맡고, 코의 후각은 1번, 시각은 2번입니다. 얼굴 표면의 눈과 코 표지는 각 기능을 연결해 보여 줍니다.',say:'눈의 움직임은 삼번, 사번, 육번이 함께 맡고, 코의 후각은 일번, 시각은 이번입니다. 얼굴 표면의 눈과 코 표지는 각 기능을 연결해 보여 줍니다.',do(){zoom(495,300,1.28,1000);sfx('pop');}},
+    {id:'2-22d',s:'N',t:'말과 삼킴에서는 다섯 신경을 특히 구분하세요. 5번은 씹기와 구강 감각, 7번은 입술 조음과 혀 앞쪽 맛, 9번은 혀 뒤쪽과 인두 감각 및 인두 운동을 맡습니다.',say:'말과 삼킴에서는 다섯 신경을 특히 구분하세요. 오번은 씹기와 구강 감각, 칠번은 입술 조음과 혀 앞쪽 맛, 구번은 혀 뒤쪽과 인두 감각 및 인두 운동을 맡습니다.',do(){zoomOut(500);$('#r12f-card').classList.add('on');zoom(900,560,1.12,900);sfx('glow');}},
+    {id:'2-22e',s:'N',t:'10번 미주신경은 연구개와 인두, 후두 운동의 중심으로 발성, 공명, 삼킴을 돕습니다. 12번 설하신경은 혀를 움직여 조음하고, 11번 부신경은 목 돌림과 어깨 들기를 담당합니다. 기능 지도로 위치와 역할을 함께 확인하세요.',say:'십번 미주신경은 연구개와 인두, 후두 운동의 중심으로 발성, 공명, 삼킴을 돕습니다. 십이번 설하신경은 혀를 움직여 조음하고, 십일번 부신경은 목 돌림과 어깨 들기를 담당합니다. 기능 지도로 위치와 역할을 함께 확인하세요.',do(){zoomOut(500);$('#r12face').classList.add('swallow');zoom(900,700,1.08,900);sfx('ding');}},
+    {id:'2-22f',s:'N',t:'정리하면 얼굴 감각과 저작은 5번, 표정과 입술은 7번, 인두 감각과 운동은 9번, 발성과 삼킴은 10번, 목과 어깨는 11번, 혀 운동은 12번입니다.',say:'정리하면 얼굴 감각과 저작은 오번, 표정과 입술은 칠번, 인두 감각과 운동은 구번, 발성과 삼킴은 십번, 목과 어깨는 십일번, 혀 운동은 십이번입니다.',do(){zoomOut(500);$('#r12face').classList.remove('swallow');on('#r12face',false);}},
     /* C. 하행 운동로 */
     {id:'2-23', s:'N', t:'이제 운동 명령이 내려가는 길, 하행 운동로입니다. 추체로와 추체외로가 있습니다.',
       do(S){ on('#sp',false); S.cnHi([]); W.lblAllOff(); W.show({cn:false, cns:true, motor:true}); W.fib('pns',0); W.part('cerebellum',{op:0.35}); W.brain({op:0.14}); W.shift(0); S.motorOnly(['umn','cbulbar','lmn','muscle']); W.part(['epLoop','cbLoop'],{op:0}); W.view('motor',2200); sfx('whoosh'); }},

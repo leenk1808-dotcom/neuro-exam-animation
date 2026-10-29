@@ -57,9 +57,9 @@ CLIPS.push({ code:'0', short:'오프닝', title:'오프닝 · 말산출 4단계'
     {id:'O-06', s:'N', t:'셋째, 말운동 계획과 프로그래밍 단계. 어떤 근육을 어떤 순서와 타이밍으로 움직일지 운동 프로그램을 짭니다.', do(S){ S.tok(2,'🧭 입술 → 혀 → 턱 … 타이밍'); sfx('pop'); }},
     {id:'O-07', s:'N', t:'넷째, 말운동 수행 단계. 호흡, 발성, 공명, 조음 기관이 실제로 움직여 소리가 나옵니다.', do(S){ S.tok(3,'🔊 "사과 주세요!"'); sfx('ding'); }},
     {id:'O-08', s:'N', t:'그렇다면 각 단계가 고장 나면 어떤 장애가 될까요?', do(){ $$('.st').forEach(e=>e.classList.remove('act')); $('#tok').style.opacity=0; }},
-    {id:'O-09', s:'N', t:'개념 형성 단계의 문제는 치매 같은 인지장애,', do(){ $('#st0').classList.add('bad'); on('#dz0'); sfx('bad'); }},
-    {id:'O-10', s:'N', t:'부호화 단계의 문제는 언어장애인 실어증,', do(){ $('#st1').classList.add('bad'); on('#dz1'); sfx('bad'); }},
-    {id:'O-11', s:'N', t:'운동 계획과 프로그래밍 단계의 문제는 말실행증,', do(){ $('#st2').classList.add('bad'); on('#dz2'); sfx('bad'); }},
+    {id:'O-09', s:'N', t:'개념 형성 단계의 문제는 치매 같은 인지장애입니다.', do(){ $('#st0').classList.add('bad'); on('#dz0'); sfx('bad'); }},
+    {id:'O-10', s:'N', t:'부호화 단계의 문제는 언어장애인 실어증입니다.', do(){ $('#st1').classList.add('bad'); on('#dz1'); sfx('bad'); }},
+    {id:'O-11', s:'N', t:'운동 계획과 프로그래밍 단계의 문제는 말실행증입니다.', do(){ $('#st2').classList.add('bad'); on('#dz2'); sfx('bad'); }},
     {id:'O-12', s:'N', t:'운동 수행 단계의 문제는 마비말장애입니다. 말실행증과 마비말장애는 함께 말장애로 묶습니다.', do(){ $('#st3').classList.add('bad'); on('#dz3'); sfx('bad'); later(()=>{ on('#grp'); sfx('pop'); },1600); }},
     {id:'O-13', s:'N', t:'국시 포인트입니다. 말실행증은 계획의 문제라 신경과 근육 자체는 정상이고, 마비말장애는 수행의 문제라 신경과 근육 자체가 손상되어 있습니다.',
       do(){ on('#belt',false); later(()=>{ on('#opt'); sfx('ding'); },400); }},
@@ -75,6 +75,9 @@ const Q11 = [
   {sec:8, q:'언어 이해를 담당하는 베르니케 영역의 브로드만 번호는?', opts:['4번','17번','22번','39번','44번'], ans:2,
    say:'문제입니다. 언어 이해를 담당하는 베르니케 영역의 브로드만 번호는 무엇일까요?',
    ex:'정답은 3번, 22번입니다. 4번은 일차운동영역, 17번은 일차시각영역, 39번은 각회, 44번은 브로카 영역입니다.'},
+  {sec:9, q:'일차운동영역(브로드만 4번)에 대한 설명으로 옳은 것은?', opts:['중심고랑 바로 뒤의 중심뒤이랑에 있다','같은 쪽(동측) 몸의 움직임을 담당한다','손과 입술·혀를 담당하는 영역이 넓게 배치되어 있다','얼굴·혀 영역은 대뇌세로열 안쪽 면에 있다','움직임의 순서를 계획하는 보조운동영역이다'], ans:2,
+   say:'일차운동영역에 대한 설명으로 옳은 것을 골라 보세요.',
+   ex:'정답은 3번입니다. 일차운동영역은 중심고랑 바로 앞의 중심앞이랑에 있고 반대쪽 몸을 담당합니다. 얼굴과 혀 영역은 아래쪽 외측에 있고, 순서 계획은 6번 보조운동영역의 역할입니다.'},
   {sec:9, q:'궁상속이 속한 신경섬유의 종류와, 궁상속이 손상되었을 때 나타나는 실어증으로 옳은 것은?', opts:['투사섬유 - 베르니케 실어증','연합섬유 - 전도실어증','교련섬유 - 전도실어증','연합섬유 - 브로카 실어증','투사섬유 - 명칭실어증'], ans:1,
    say:'궁상속이 속한 신경섬유의 종류와, 손상되었을 때 나타나는 실어증을 골라 보세요.',
    ex:'정답은 2번입니다. 궁상속은 같은 반구 안을 잇는 연합섬유이고, 손상되면 따라 말하기가 어려운 전도실어증이 나타납니다.'},
@@ -109,6 +112,94 @@ function grayWhiteSVG(){
   return {brain, cord};
 }
 
+/* ---------- 1-1 보강: 브로드만 표지(바깥을 향한 지점) · 중심앞/뒤이랑 띠 · 호문쿨루스 ---------- */
+/* 영역 안에서 바깥(옆)을 향한 이랑 꼭대기 지점을 고름 → 번호가 뇌 뒤에 숨지 않음 */
+function pickLat(names, o={}){
+  const m=W.hemiL, u=m.geometry.userData, P=m.geometry.attributes.position, N=m.geometry.attributes.normal;
+  if(!u||!u.real) return null;
+  const ids=new Set([].concat(names).map(n=>u.names.indexOf(n))); const sel=[]; let cx=0,cy=0,cz=0;
+  for(let i=0;i<u.n;i++){ if(!ids.has(u.lab[i])) continue; if(o.umin!=null&&u.U[i]<o.umin) continue; if(o.umax!=null&&u.U[i]>o.umax) continue; if(o.fmin!=null&&u.F[i]<o.fmin) continue; if(o.fmax!=null&&u.F[i]>o.fmax) continue; if(o.minL!=null&&u.L[i]<o.minL) continue; sel.push(i); cx+=P.getX(i); cy+=P.getY(i); cz+=P.getZ(i); }
+  if(!sel.length) return null; cx/=sel.length; cy/=sel.length; cz/=sel.length;
+  const d=o.dir||[-1,0,0], dl=Math.hypot(d[0],d[1],d[2]); let best=-1, bd=1e9;
+  for(const pass of [0,1]){ sel.forEach(i=>{ const nd=(N.getX(i)*d[0]+N.getY(i)*d[1]+N.getZ(i)*d[2])/dl; if(pass===0&&(nd<(o.minDot??0.6)||u.groove[i]>0.45)) return; const q=(P.getX(i)-cx)**2+(P.getY(i)-cy)**2+(P.getZ(i)-cz)**2; if(q<bd){bd=q;best=i;} }); if(best>=0) break; }
+  return {p:Vx(P.getX(best),P.getY(best),P.getZ(best)), n:Vx(N.getX(best),N.getY(best),N.getZ(best))};
+}
+const MK11={};
+function mk11(id, spec, color){
+  if(MK11[id]) return MK11[id];
+  const s=pickLat(spec[0], Object.assign({}, spec[1]||{}, spec[2]||{})) || W.surf(spec[3]?.[0]??0, spec[3]?.[1]??0, 0.3);
+  const m=new THREE.Mesh(new THREE.SphereGeometry(0.036,16,12), new THREE.MeshBasicMaterial({color, transparent:true, opacity:0}));
+  m.position.copy(s.p).add(s.n.clone().multiplyScalar(0.014)); W.hemiL.add(m); W.regPart('mk11_'+id, m, m.material, 0);
+  return (MK11[id]={p:m.position.clone(), n:s.n.clone()});
+}
+/* 이랑 꼭대기를 따라가는 띠 (아래 외측고랑 쪽 U≈0 → 위 U≈0.76) */
+const STRIP11={};
+function strip11(name, label, color){
+  if(STRIP11[name]) return STRIP11[name];
+  const m=W.hemiL, u=m.geometry.userData, P=m.geometry.attributes.position, N=m.geometry.attributes.normal, id=u.names.indexOf(label); const pts=[], nrm=[], us=[];
+  for(let U=0.0; U<=0.765; U+=0.05){ let s=[0,0,0], n=[0,0,0], c=0;
+    for(let i=0;i<u.n;i++){ if(u.lab[i]!==id || Math.abs(u.U[i]-U)>0.03 || u.groove[i]>0.3) continue; s[0]+=P.getX(i); s[1]+=P.getY(i); s[2]+=P.getZ(i); n[0]+=N.getX(i); n[1]+=N.getY(i); n[2]+=N.getZ(i); c++; }
+    if(c<2) continue; const nv=Vx(n[0],n[1],n[2]).normalize(); pts.push(Vx(s[0]/c,s[1]/c,s[2]/c).add(nv.clone().multiplyScalar(0.03))); nrm.push(nv); us.push(U); }
+  const mesh=W.tube(pts, 0.03, color, {basic:true, op:0, seg:140, rs:12}); mesh.renderOrder=3; m.add(mesh); W.regPart(name, mesh, mesh.material, 0);
+  return (STRIP11[name]={pts, nrm, us, at(U){ let k=0; us.forEach((x,i)=>{ if(Math.abs(x-U)<Math.abs(us[k]-U)) k=i; }); return {p:pts[k].clone(), n:nrm[k].clone()}; }});
+}
+/* 호문쿨루스: 대뇌 관상 단면(왼쪽 = 감각 · 중심뒤이랑, 오른쪽 = 운동 · 중심앞이랑) */
+function homunSVG(){
+  const MID=380, CX=34, CY=330, RX=180, RY=240, T0=96, T1=-16;
+  const MOT=[['발·발가락',0.08,'#5EE0A8','🦶'],['다리',0.07,'#7BE3B6',''],['몸통',0.06,'#9FE0CF',''],['어깨·팔',0.08,'#8FC1FF','💪'],['손목·손',0.10,'#5C9BFF',''],['손가락·엄지',0.13,'#4F8EF7','✋'],['목·이마·눈',0.07,'#FFD36B','👁️'],['얼굴',0.09,'#FFB86B','🙂'],['입술',0.12,'#FF7D9B','👄'],['턱',0.05,'#FF9C8C',''],['혀',0.10,'#FF5C7A','👅'],['삼킴(인두·후두)',0.05,'#C58BFF','']];
+  const SEN=[['발·발가락',0.07,'#5EE0A8','🦶'],['다리',0.06,'#7BE3B6',''],['몸통·머리',0.07,'#9FE0CF',''],['팔',0.07,'#8FC1FF','💪'],['손·손가락',0.21,'#4F8EF7','✋'],['눈·코',0.06,'#FFD36B','👁️'],['얼굴',0.09,'#FFB86B','🙂'],['입술',0.13,'#FF7D9B','👄'],['이·잇몸·턱',0.07,'#FF9C8C',''],['혀',0.09,'#FF5C7A','👅'],['인두·내장',0.08,'#C58BFF','']];
+  const P=(th,r=0)=>{ const a=th*Math.PI/180; return [CX+(RX+r)*Math.cos(a), CY-(RY+r)*Math.sin(a)]; };
+  const side=(list, sgn, cls)=>{ let acc=0, out='';
+    list.forEach(([t,f,c,ic],k)=>{ const a0=T0+(T1-T0)*acc, a1=T0+(T1-T0)*(acc+f), am=(a0+a1)/2; acc+=f;
+      const seg=[]; for(let j=0;j<=10;j++){ const [x,y]=P(a0+(a1-a0)*j/10); seg.push((MID+sgn*x).toFixed(1)+' '+y.toFixed(1)); }
+      const [lx,ly]=P(am,(f>0.095?64:44)), [ix,iy]=P(am,8); const fs=Math.round(15+f*70), anc=sgn>0?'start':'end';
+      const tx=MID+sgn*lx, ty=ly+5;
+      out+=`<g class="hseg ${cls}" style="--d:${k*0.12}s"><path d="M${seg.join(' L')}" stroke="${c}" stroke-width="30" fill="none" stroke-linecap="butt"/>`+
+        `<line x1="${(MID+sgn*ix).toFixed(1)}" y1="${iy.toFixed(1)}" x2="${(tx-sgn*4).toFixed(1)}" y2="${(ty-5).toFixed(1)}" stroke="${c}" stroke-width="1.6" opacity=".7"/>`+
+        `<text x="${tx.toFixed(1)}" y="${ty.toFixed(1)}" text-anchor="${anc}" font-size="${fs}" fill="${c}" font-weight="800">${ic?`<tspan font-size="${fs+4}">${ic}</tspan> `:''}${t}</text></g>`; });
+    return out; };
+  const hemi=(sgn)=>{ const pts=[]; for(let a=T0;a>=T1;a-=4){ const [x,y]=P(a,-16); pts.push((MID+sgn*x).toFixed(1)+' '+y.toFixed(1)); } const [ex,ey]=P(T1,-16);
+    return `<path d="M${MID+sgn*14} ${CY-RY+18} L${pts.join(' L')} Q${(MID+sgn*(ex-40)).toFixed(1)} ${(ey+60).toFixed(1)} ${MID+sgn*120} ${CY+150} L${MID+sgn*14} ${CY+150} Z" fill="url(#hwm)" stroke="#B99AA0" stroke-width="2"/>`+
+      `<path d="M${MID+sgn*14} ${CY-RY+18} L${pts.join(' L')}" fill="none" stroke="#A88C93" stroke-width="22" opacity=".9"/>`; };
+  return `<svg viewBox="0 0 760 530" xmlns="http://www.w3.org/2000/svg"><defs><radialGradient id="hwm" cx="50%" cy="40%" r="70%"><stop offset="0" stop-color="#F4ECE4"/><stop offset="1" stop-color="#DCCBBE"/></radialGradient></defs>
+    ${hemi(-1)}${hemi(1)}
+    <line x1="${MID}" y1="${CY-RY-6}" x2="${MID}" y2="${CY+150}" stroke="#0B1020" stroke-width="6"/>
+    <g class="hS">${side(SEN,-1,'s')}</g><g class="hM">${side(MOT,1,'m')}</g>
+    <text x="${MID}" y="${CY+184}" text-anchor="middle" font-size="17" fill="#A9B8D8" font-weight="700">▲ 대뇌세로열(안쪽) &nbsp;·&nbsp; 아래 양 끝 = 외측고랑 쪽</text></svg>`;
+}
+const CSS11=`<style>
+#homu{left:820px;top:96px;width:740px;padding:14px 10px 6px}
+#homu h3{margin:0 0 4px 14px} #homu .hh{display:flex;justify-content:space-between;padding:0 18px;font-size:19px;font-weight:800}
+#homu svg{width:100%;display:block}
+#homu .hseg{opacity:0;transition:opacity .5s var(--d,0s)} #homu.m .hseg.m, #homu.s .hseg.s{opacity:1}
+#homu .hS,#homu .hM{transition:opacity .6s} #homu.fm .hS{opacity:.28} #homu.fs .hM{opacity:.28}
+#contra{left:860px;top:110px;width:660px;padding:18px 22px}
+#contra svg{width:100%;display:block}
+#prim{left:860px;top:120px;width:660px;padding:18px 24px}
+#prim .cols{display:grid;grid-template-columns:1fr 1fr;gap:14px;margin-top:8px}
+#prim .cols>div{border:2px solid var(--c);border-radius:14px;padding:12px 14px;font-size:19px;line-height:1.55}
+#prim h4{margin:0 0 6px;color:var(--c);font-size:22px}
+#sma{left:860px;top:150px;width:640px;padding:18px 24px}
+.lb3.bp .tx{font-size:19px}
+</style>`;
+function contraSVG(){
+  return `<svg viewBox="0 0 620 430" xmlns="http://www.w3.org/2000/svg">
+  <defs><marker id="ca1" markerWidth="9" markerHeight="9" refX="5" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9z" fill="#7FB2FF"/></marker><marker id="ca2" markerWidth="9" markerHeight="9" refX="5" refY="4.5" orient="auto"><path d="M0 0 L9 4.5 L0 9z" fill="#FFC94A"/></marker></defs>
+  <text x="310" y="20" text-anchor="middle" font-size="16" fill="#A9B8D8" font-weight="700">위에서 본 뇌 · 뒤에서 본 몸</text>
+  <ellipse cx="250" cy="92" rx="56" ry="62" fill="#4F8EF7" opacity=".85" stroke="#fff" stroke-width="2"/><ellipse cx="370" cy="92" rx="56" ry="62" fill="#3A4766" stroke="#8EA0C8" stroke-width="2"/>
+  <text x="250" y="98" text-anchor="middle" font-size="20" fill="#fff" font-weight="900">좌반구</text><text x="370" y="98" text-anchor="middle" font-size="20" fill="#C9D4F0" font-weight="900">우반구</text>
+  <circle cx="310" cy="222" r="24" fill="#3A4766" stroke="#8EA0C8" stroke-width="2"/>
+  <path d="M268 252 Q310 244 352 252 L360 340 L260 340 Z" fill="#3A4766" stroke="#8EA0C8" stroke-width="2"/>
+  <path d="M352 256 L410 330 L398 338 L345 278" fill="#FF8C8C" stroke="#FF8C8C" stroke-width="6" stroke-linejoin="round" class="rarm"/>
+  <path d="M268 256 L210 330 L222 338 L275 278" fill="#3A4766" stroke="#8EA0C8" stroke-width="6" stroke-linejoin="round"/>
+  <path d="M335 340 L345 420" stroke="#FF8C8C" stroke-width="16" stroke-linecap="round"/><path d="M285 340 L275 420" stroke="#8EA0C8" stroke-width="16" stroke-linecap="round"/>
+  <text x="190" y="400" text-anchor="end" font-size="18" fill="#C9D4F0" font-weight="800">왼쪽 몸</text><text x="430" y="400" font-size="18" fill="#FF8C8C" font-weight="800">오른쪽 몸</text>
+  <path class="cpath" d="M232 150 C 236 190, 300 170, 318 196 S 380 250, 396 300" fill="none" stroke="#7FB2FF" stroke-width="5" marker-end="url(#ca1)"/>
+  <path class="cpath c2" d="M420 336 C 440 280, 360 236, 314 204 S 262 176, 262 158" fill="none" stroke="#FFC94A" stroke-width="4" stroke-dasharray="9 7" marker-end="url(#ca2)"/>
+  <text x="30" y="190" font-size="18" fill="#7FB2FF" font-weight="800">운동 명령 ↓</text><text x="470" y="262" font-size="18" fill="#FFC94A" font-weight="800">감각 ↑</text>
+  <text x="310" y="176" text-anchor="middle" font-size="15" fill="#fff" font-weight="700">교차</text></svg>`;
+}
+
 CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 ① 뇌의 구조', desc:'뉴런 · 회백질/백질 · 대뇌 4엽 · 브로드만 · 섬유 · 기저핵 · 간뇌 · 뇌간 · 소뇌 · 퀴즈 4문제',
   build(S){
     const G=W.groups, hl=W.hemiL;
@@ -120,13 +211,13 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
       <div class="tr" id="tr2" style="--c:#FFC94A"><span class="h">말초신경계 (PNS)</span> · 뇌·척수 밖으로 뻗은 신경</div>
       <div class="tr sub" id="tr3" style="--c:#FFC94A"><span class="h">체성신경계</span> · 뇌신경 <b>12쌍</b> · 척수신경 <b>31쌍</b></div>
       <div class="tr sub" id="tr4" style="--c:#5EE0A8"><span class="h">자율신경계</span> · 교감 ↔ 부교감
-        <div class="yy"><div>교감신경<br><b class="hl-o">기능 촉진</b></div><div>부교감신경<br><b class="hl-b">기능 감소</b></div></div>
+        <div class="yy"><div>교감신경<br><b class="hl-o">기능 촉진</b><div class="fade" id="yy1" style="font-size:16px;color:#C9D4F0">투쟁-도피 · 동공 확대 · 심박 증가</div></div><div>부교감신경<br><b class="hl-b">기능 감소</b><div class="fade" id="yy2" style="font-size:16px;color:#C9D4F0">휴식-소화 · 동공 축소 · 심박 감소</div></div></div>
         <div style="font-size:19px;margin-top:6px;text-align:center">서로 반대로 작용 = <b class="hl-g">길항작용</b> → 항상성 유지</div></div></div>`);
     /* --- 뉴런 --- */
     add(`<div class="glass ntype fade" id="ntype">
-      <div class="nt" style="--c:#5EE0A8"><h4>감각뉴런</h4><div>감각 수용기 → 중추<br><b>구심성</b> (중심으로 들어감)</div></div>
+      <div class="nt" style="--c:#5EE0A8"><h4>감각뉴런</h4><div>감각 수용기 → 중추<br><b>구심성</b> (중심으로 들어감)<br><span style="font-size:17px;color:#A9B8D8">구심성 = 감각 = 상행</span></div></div>
       <div class="nt" style="--c:#7FB2FF"><h4>중간(연결)뉴런</h4><div>감각과 운동을 연결 ·<br>정보를 분석하고 통합</div></div>
-      <div class="nt" style="--c:#FF8CC6"><h4>운동뉴런</h4><div>중추 → 근육(반응기)<br><b>원심성</b> (중심에서 나감)</div></div></div>`);
+      <div class="nt" style="--c:#FF8CC6"><h4>운동뉴런</h4><div>중추 → 근육(반응기)<br><b>원심성</b> (중심에서 나감)<br><span style="font-size:17px;color:#A9B8D8">원심성 = 운동 = 하행</span></div></div></div>`);
     add(`<div class="glass glia fade" id="glia"><h3>교세포 (신경아교세포)</h3>
       <div class="row">신경세포를 <b class="hl-y">물리적으로 지지</b>하는 세포</div>
       <div class="row" style="margin-top:8px">손상 시 → <b>진행성 핵상마비</b> (마비말장애), <b>치매</b> 등</div>
@@ -144,10 +235,12 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
       <div style="position:absolute;left:30px;right:30px;bottom:18px;font-size:21px;font-weight:700;color:#DCE5FA" class="fade" id="g6">회백질 = 세포체 · 수상돌기 · 신경연접 &nbsp;|&nbsp; 백질 = 축삭 · 교세포 (수초 때문에 하얗게 보임)</div></div>`);
     /* --- 브로드만 표 --- */
     add(`<div class="glass btable fade" id="btab"><h3>브로드만 영역 한눈에</h3><table>
-      <tr><td class="l">전두엽</td><td class="n">4</td><td>일차운동영역</td></tr>
-      <tr><td class="l"></td><td class="n">6</td><td>전운동 · 보조운동영역</td></tr>
+      <tr><td class="l">전두엽</td><td class="n">4</td><td>일차운동영역 (중심앞이랑)</td></tr>
+      <tr><td class="l"></td><td class="n">6 · 8</td><td>전운동영역 (6번 안쪽 윗면 = 보조운동영역)</td></tr>
+      <tr><td class="l"></td><td class="n">9 · 10</td><td>전전두 연합영역 (기억 · 사고 · 판단)</td></tr>
       <tr><td class="l"></td><td class="n">44 · 45</td><td><b class="hl-b">브로카 영역</b> (말 산출)</td></tr>
-      <tr><td class="l">두정엽</td><td class="n">3 · 1 · 2</td><td>일차체감각영역</td></tr>
+      <tr><td class="l">두정엽</td><td class="n">3 · 1 · 2</td><td>일차체감각영역 (중심뒤이랑)</td></tr>
+      <tr><td class="l"></td><td class="n">5 · 7</td><td>체감각연합영역</td></tr>
       <tr><td class="l"></td><td class="n">39</td><td>각회 (읽기)</td></tr>
       <tr><td class="l">측두엽</td><td class="n">41</td><td>일차청각영역</td></tr>
       <tr><td class="l"></td><td class="n">42</td><td>청각연합영역</td></tr>
@@ -161,8 +254,8 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
       <div class="res"><div id="r1" style="--c:#FFAE5C"><b>파킨슨병</b><br>강직 · 서동 · 안정 떨림<br><span style="font-size:17px;color:#A9B8D8">→ 과소운동형 마비말장애</span></div>
       <div id="r2" style="--c:#FF8CC6"><b>헌팅턴병 · 무도병</b><br>원치 않는 움직임<br><span style="font-size:17px;color:#A9B8D8">→ 과다운동형 마비말장애</span></div></div></div>`);
     add(`<div class="glass cncard fade" id="cn"><h3>뇌간과 뇌신경</h3>
-      <div class="lv" id="lv1" style="--c:#FFB86B"><div class="nm">중뇌</div><div class="cn">III · IV</div><div class="fn">시각 · 청각 반사 중추</div></div>
-      <div class="lv" id="lv2" style="--c:#FFE45C"><div class="nm">뇌교</div><div class="cn">V ~ VIII</div><div class="fn">대뇌와 소뇌를 잇는 다리</div></div>
+      <div class="lv" id="lv1" style="--c:#FFB86B"><div class="nm">중뇌</div><div class="cn">III · IV</div><div class="fn">시각 · 청각 반사 중추<br>흑질 · 적핵 · 각성과 수면</div></div>
+      <div class="lv" id="lv2" style="--c:#FFE45C"><div class="nm">뇌교</div><div class="cn">V ~ VIII</div><div class="fn">대뇌와 소뇌를 잇는 다리<br>얼굴 감각 · 저작 · 표정</div></div>
       <div class="lv" id="lv3" style="--c:#FF8C8C"><div class="nm">연수</div><div class="cn">IX ~ XII</div><div class="fn">호흡 · 삼킴 · 발성 · 심장박동<br>운동신경 교차</div></div>
       <div class="row fade" id="cnx" style="margin-top:12px;font-size:20px">12쌍 중 <b>I 후신경</b>, <b>II 시신경</b>을 뺀 <b class="hl-y">10쌍</b>이 뇌간에서 나옴</div></div>`);
     add(`<div class="glass fade" id="cbc" style="right:60px;top:170px;width:540px"><h3>소뇌</h3>
@@ -173,13 +266,26 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
       <div class="sc" style="--c:#7FB2FF"><h4>신경계</h4><div>CNS = 뇌 + 척수<br>PNS = 체성(뇌신경 12 · 척수신경 31) + 자율(교감 ↔ 부교감)</div></div>
       <div class="sc" style="--c:#C58BFF"><h4>뉴런</h4><div>세포체 = 통합 · 수상돌기 = 수신 · 축삭 = 전달<br>미엘린 = 절연 · 랑비에 결절 = 속도 ↑</div></div>
       <div class="sc" style="--c:#EFE8DC"><h4>회백질 vs 백질</h4><div>뇌: 회백질 바깥 · 척수: 회백질 안쪽<br>회백질 = 세포체 · 백질 = 축삭</div></div>
-      <div class="sc" style="--c:#FFE45C"><h4>대뇌 4엽 · 브로드만</h4><div>4 운동 · 44·45 브로카 · 3·1·2 체감각 · 39 각회<br>41 청각 · 42 청각연합 · 22 베르니케 · 17 시각</div></div>
+      <div class="sc" style="--c:#FFE45C"><h4>대뇌 4엽 · 브로드만</h4><div>4 운동 · 6·8 전운동 · 44·45 브로카 · 3·1·2 체감각<br>39 각회 · 41 청각 · 42 청각연합 · 22 베르니케 · 17 시각<br>운동·감각 = <b>반대쪽</b> 몸 · 호문쿨루스: 손·입술·혀 넓음</div></div>
       <div class="sc" style="--c:#FF8CC6"><h4>섬유 3종</h4><div>투사 = 위아래 · 교련 = 좌우(뇌량)<br>연합 = 같은 반구(궁상속 → 전도실어증)</div></div>
       <div class="sc" style="--c:#5EE0A8"><h4>기저핵 · 간뇌</h4><div>미상핵 · 조가비핵 · 담창구 / 도파민<br>시상 = 후각 뺀 감각 중계 · 시상하부 = 항상성</div></div>
       <div class="sc" style="--c:#FFB86B"><h4>뇌간</h4><div>중뇌 III·IV · 뇌교 V~VIII · 연수 IX~XII<br>연수 = 호흡·삼킴·발성 · 운동신경 교차</div></div>
       <div class="sc" style="--c:#D99A9C"><h4>소뇌</h4><div>운동 · 균형 협응 · 동측 지배<br>손상 → 실조형 마비말장애</div></div>
       <div class="sc" style="--c:#9FB2DA"><h4>다음 시간</h4><div>1-2 뇌신경 12쌍 · 추체로/추체외로<br>UMN · LMN</div></div></div>`);
-    Q11.forEach((q,i)=>add(quizHTML('q11_'+i, q)));
+    ['q11_0','q11_4','q11_1','q11_2','q11_3'].forEach((id,i)=>add(quizHTML(id, Q11[i])));
+    /* --- 일차운동 · 일차체감각 보강 --- */
+    add(CSS11);
+    add(`<div class="glass fade" id="homu"><h3>체부위 배열 · 호문쿨루스</h3><div class="hh"><span style="color:#FFC94A">감각 · 중심뒤이랑 (3·1·2)</span><span style="color:#7FB2FF">운동 · 중심앞이랑 (4)</span></div>${homunSVG()}</div>`);
+    add(`<div class="glass fade" id="contra"><h3>대측 지배 · 반대쪽 몸을 담당</h3>${contraSVG()}
+      <div class="row" style="font-size:21px;margin-top:6px">좌반구 손상 → <b class="hl-r">오른쪽</b> 편마비 · 감각 저하 &nbsp;<span style="font-size:17px;color:#A9B8D8">(소뇌만 같은 쪽)</span></div></div>`);
+    add(`<div class="glass fade" id="prim"><h3>일차피질 vs 연합피질</h3><div class="cols">
+      <div style="--c:#7FB2FF"><h4>일차피질</h4>정보의 <b class="hl-y">초기 처리</b><br>4 운동 · 3·1·2 체감각<br>41 청각 · 17 시각</div>
+      <div style="--c:#C58BFF"><h4>연합피질</h4><b class="hl-y">통합 · 해석 · 계획</b><br>6·8 전운동 · 5·7 체감각연합<br>42 청각연합 · 18·19 시각연합</div></div>
+      <div class="row" style="font-size:21px;margin-top:12px;text-align:center">운동 계획: <b class="hl-p">연합피질</b> → <b class="hl-b">일차운동피질</b> → 추체로</div></div>`);
+    add(`<div class="glass fade" id="sma"><h3>6번 영역 · 운동의 준비</h3>
+      <div class="row"><b class="hl-b">전운동영역</b> (바깥쪽) · 감각 정보에 맞춘 운동 준비 · 자세 조절</div>
+      <div class="row" style="margin-top:8px"><b class="hl-p">보조운동영역</b> (안쪽 윗면) · 스스로 시작하는 움직임 · 순서 계획</div>
+      <div class="row fade" id="smaX" style="margin-top:12px;font-size:21px">보조운동영역 = <b>전대뇌동맥(ACA)</b> 영역<br>손상 → 말 시작이 어려움 · <b class="hl-r">연결피질운동실어증</b></div></div>`);
 
     /* --- 3D 라벨 --- */
     L3('cnsBrain','뇌', G.brain, Vx(-0.75,0.55,-0.2), {color:'#7FB2FF', dx:-110, dy:-60, cls:'big'});
@@ -207,17 +313,47 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
     lp.forEach(([F,U,t,c,dx,dy,d],i)=>{ const s=W.lp(LBL4[i],{minL:0.2},[F,U,i===3?-0.2:0.4]); L3('lobe'+i, `${t} <small>${d}</small>`, hl, s.p, {normal:s.n, color:c, dx, dy, cls:'big'}); });
     const ins=W.lp(['G_insular_short','G_Ins_lg_and_S_cent_ins'],{},[0.12,0.0,0.3]); L3('ins','섬엽(도엽) <small>외측고랑 깊숙이</small>', hl, ins.p, {normal:ins.n, color:'#FFAE5C', dx:-40, dy:120});
     /* 브로드만 표지 */
-    const BA=[['4',0.16,0.38,'4 <small>일차운동</small>',10,-120,0.5],['6',0.36,0.43,'6 <small>전운동·보조운동</small>',-130,-70,0.5],['44',0.46,-0.02,'44 · 45 <small>브로카</small>',-110,90,0.5],
-      ['312',0.02,0.38,'3 · 1 · 2 <small>일차체감각</small>',110,-110,0.5],['39',-0.56,0.22,'39 <small>각회 · 읽기</small>',110,-90,0.5],['41',0.05,-0.08,'41 <small>일차청각</small>',-60,110,0.5],
-      ['42',-0.14,-0.05,'42 <small>청각연합</small>',60,130,0.5],['22',-0.34,0.03,'22 <small>베르니케</small>',140,90,0.5],['17',-1.0,-0.02,'17 <small>일차시각</small>',110,70,-0.4],['18',-0.86,0.2,'18 · 19 <small>시각연합</small>',140,-30,0.1]];
-    const BC={'4':'#7FB2FF','6':'#7FB2FF','44':'#4F8EF7','312':'#F5B841','39':'#F5B841','41':'#2FC48A','42':'#2FC48A','22':'#2FC48A','17':'#EE6A93','18':'#EE6A93'};
-    const BN={'4':[-8,-52],'6':[-62,-36],'312':[48,-50],'44':[-52,44],'39':[42,-44],'41':[-36,56],'42':[18,68],'22':[58,40],'17':[52,34],'18':[56,-30]};
-    const BL={'4':[['G_precentral'],{umin:0.3,umax:0.55,minL:0.3}],'6':[['S_precentral-sup-part','G_front_middle'],{fmax:0.45,umin:0.3,minL:0.2}],'44':[['G_front_inf-Opercular','G_front_inf-Triangul'],{}],
-      '312':[['G_postcentral'],{umin:0.3,umax:0.55,minL:0.3}],'39':[['G_pariet_inf-Angular'],{minL:0.1}],'41':[['G_temp_sup-Lateral'],{fmin:-0.05,fmax:0.2}],'42':[['G_temp_sup-Lateral'],{fmin:-0.3,fmax:-0.05}],
-      '22':[['G_temp_sup-Lateral','G_temp_sup-Plan_tempo'],{fmax:-0.3,minL:0.2}],'17':[['Pole_occipital'],{}],'18':[['G_occipital_middle'],{minL:0.2}]};
-    BA.forEach(([id,F,U,t,dx,dy,mL])=>{ const m=W.marker(id,F,U,BC[id],mL,BL[id]); L3('ba'+id, t, hl, m.p, {normal:m.n, color:BC[id], dx, dy});
-      L3('bn'+id, t.split('<small>')[0].trim(), hl, m.p, {normal:m.n, color:BC[id], dx:BN[id][0], dy:BN[id][1], cls:'num'}); });
-    S.ba=(ids,v=true)=>{ if(v) BA.forEach(b=>W.lbl('ba'+b[0],false)); ids.forEach(id=>{ W.part('mk_'+id,{op:v?1:0}); W.lbl('ba'+id,v); }); };
+    /* 영역마다 표지 1개 + 번호 1개. 점은 옆(카메라)을 향한 이랑 꼭대기에서 고름 → 외측면 보기에서 가려지지 않음
+       [id, 라벨, 색, [부위 이름들, 범위, 추가옵션, 대체F/U], 라벨 dx, dy, 번호 dx, dy] */
+    const BA=[
+      ['4','4 <small>일차운동</small>','#7FB2FF',[['G_precentral'],{umin:0.3,umax:0.5}],-20,-150,-11,-114],
+      ['6','6 <small>전운동·보조운동</small>','#7FB2FF',[['G_front_middle','G_front_sup','S_precentral-sup-part'],{fmin:0.25,fmax:0.4,umin:0.35,umax:0.6}],-150,-110,-45,-75],
+      ['8','8 <small>전운동</small>','#7FB2FF',[['G_front_middle','G_front_sup'],{fmin:0.5,fmax:0.62,umin:0.3,umax:0.55}],-110,-80,-44,-59],
+      ['9','9 <small>전전두 연합</small>','#9FB2DA',[['G_front_middle','G_front_sup'],{fmin:0.72,fmax:0.86,umin:0.15,umax:0.45}],-150,-40,-76,-16],
+      ['10','10 <small>전전두 연합</small>','#9FB2DA',[['G_and_S_transv_frontopol','G_and_S_frontomargin','G_front_sup','G_front_middle'],{fmin:0.9,umin:-0.25,umax:0.05},{dir:[-0.6,0,-0.8]}],-140,40,-64,20],
+      ['44','44 <small>브로카 · 덮개부</small>','#4F8EF7',[['G_front_inf-Opercular'],{fmin:0.25,fmax:0.45}],40,120,-13,97],
+      ['45','45 <small>브로카 · 삼각부</small>','#4F8EF7',[['G_front_inf-Triangul'],{}],-120,100,-26,72],
+      ['312','3 · 1 · 2 <small>일차체감각</small>','#F5B841',[['G_postcentral'],{umin:0.3,umax:0.5}],40,-160,18,-132],
+      ['5','5 <small>체감각연합</small>','#F5B841',[['G_parietal_sup','G_postcentral','G_and_S_paracentral'],{fmin:-0.35,fmax:-0.15,umin:0.55}],60,-110,50,-69],
+      ['7','7 <small>체감각연합</small>','#F5B841',[['G_parietal_sup'],{fmin:-0.65,fmax:-0.4}],110,-80,38,-79],
+      ['39','39 <small>각회 · 읽기</small>','#F5B841',[['G_pariet_inf-Angular'],{}],130,-70,71,-60],
+      ['41','41 <small>일차청각</small>','#2FC48A',[['G_temp_sup-Lateral'],{fmin:0.0,fmax:0.2}],-80,120,-6,87],
+      ['42','42 <small>청각연합</small>','#2FC48A',[['G_temp_sup-Lateral'],{fmin:-0.25,fmax:-0.05}],60,140,20,90],
+      ['22','22 <small>베르니케</small>','#2FC48A',[['G_temp_sup-Lateral','G_temp_sup-Plan_tempo'],{fmax:-0.3}],120,110,50,60],
+      ['17','17 <small>일차시각</small>','#EE6A93',[['Pole_occipital'],{}],110,90,28,43],
+      ['18','18 <small>시각연합</small>','#EE6A93',[['G_occipital_middle','S_oc_middle_and_Lunatus','G_occipital_sup'],{fmax:-0.85}],150,10,84,42],
+      ['19','19 <small>시각연합</small>','#EE6A93',[['G_occipital_middle','G_occipital_sup'],{fmin:-0.8,fmax:-0.62}],130,-70,82,-36]];
+    S.BA_IDS=BA.map(b=>b[0]);
+    BA.forEach(([id,t,c,spec,dx,dy,nx,ny])=>{ const m=mk11(id,spec,c); L3('ba'+id, t, hl, m.p, {normal:m.n, color:c, dx, dy});
+      L3('bn'+id, t.split('<small>')[0].trim(), hl, m.p, {normal:m.n, color:c, dx:nx, dy:ny, cls:'num'}); });
+    S.ba=(ids,v=true)=>{ if(v) BA.forEach(b=>W.lbl('ba'+b[0],false)); ids.forEach(id=>{ W.part('mk11_'+id,{op:v?1:0}); W.lbl('ba'+id,v); }); };
+    /* 중심앞이랑(4) · 중심뒤이랑(3·1·2) 띠와 체부위 라벨 */
+    const sM=strip11('strip4','G_precentral','#6FA8FF'), sS=strip11('strip312','G_postcentral','#FFC94A');
+    const sm=(U)=>sM.at(U), ss=(U)=>sS.at(U);
+    L3('st4','중심앞이랑 <small>4 일차운동</small>', hl, sm(0.5).p, {normal:sm(0.5).n, color:'#7FB2FF', dx:-170, dy:-90, cls:'big'});
+    L3('st312','중심뒤이랑 <small>3·1·2 일차체감각</small>', hl, ss(0.45).p, {normal:ss(0.45).n, color:'#FFC94A', dx:170, dy:-100, cls:'big'});
+    const cs2=W.lp('S_central',{umin:0.25,umax:0.4},[Fcs(0.3),0.3]);
+    L3('cs2','중심고랑', hl, cs2.p, {color:'#FFE45C', dx:120, dy:60});
+    L3('hb0','다리·발 <small>→ 안쪽 면</small>', hl, sm(0.75).p, {color:'#5EE0A8', dx:-150, dy:-70, cls:'bp'});
+    L3('hb1','몸통·팔', hl, sm(0.6).p, {normal:sm(0.6).n, color:'#9FE0CF', dx:-160, dy:-20, cls:'bp'});
+    L3('hb2','손 <small>넓음</small>', hl, sm(0.4).p, {normal:sm(0.4).n, color:'#4F8EF7', dx:-170, dy:20, cls:'bp'});
+    L3('hb3','얼굴', hl, sm(0.2).p, {normal:sm(0.2).n, color:'#FFB86B', dx:-170, dy:30, cls:'bp'});
+    L3('hb4','입술 · 혀 · 턱 · 후두 <small>말운동</small>', hl, sm(0.05).p, {normal:sm(0.05).n, color:'#FF6F91', dx:-120, dy:110, cls:'bp'});
+    S.HB=['hb0','hb1','hb2','hb3','hb4'];
+    const pm=pickLat(['G_front_middle','S_precentral-inf-part','S_precentral-sup-part'],{fmin:0.22,fmax:0.4,umin:0.2,umax:0.45})||sm(0.4);
+    L3('pm','전운동영역 <small>6 · 바깥쪽</small>', hl, pm.p, {normal:pm.n, color:'#7FB2FF', dx:-170, dy:60});
+    const smaP=pickLat(['G_front_sup'],{fmin:0.15,fmax:0.35,umin:0.6},{})||sm(0.75); const smaQ=pickLat(['G_front_sup'],{fmin:0.15,fmax:0.35,umin:0.62,minL:-0.6},{dir:[0,1,0],minDot:0.5})||smaP;
+    L3('sma','보조운동영역 <small>6 · 안쪽 윗면</small>', hl, smaQ.p, {color:'#C58BFF', dx:-60, dy:-110});
     /* 섬유 · 심부 구조 */
     L3('fproj','투사섬유 <small>방사관</small>', G.proj, Vx(-0.36,0.22,-0.3), {color:'#FFD25E', dx:-120, dy:-80, cls:'big'});
     L3('fcomm','교련섬유 <small>뇌량</small>', G.comm, Vx(0,0.33,-0.1), {color:'#66E3FF', dx:-60, dy:-120, cls:'big'});
@@ -227,7 +363,7 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
     L3('aW','베르니케 (22)', hl, wer.p, {normal:wer.n, color:'#2FC48A', dx:90, dy:80});
     L3('cau','미상핵', G.deep, Vx(-0.18,0.13,-0.44), {color:'#5ED6A8', dx:-120, dy:-60});
     L3('put','조가비핵', G.deep, Vx(-0.39,-0.05,-0.1), {color:'#C58BFF', dx:-140, dy:30});
-    L3('pal','담창구', G.deep, Vx(-0.27,-0.13,-0.04), {color:'#FF7DB8', dx:-100, dy:100});
+    L3('pal','담창구 <small>창백핵</small>', G.deep, Vx(-0.27,-0.13,-0.04), {color:'#FF7DB8', dx:-100, dy:100});
     L3('nig','흑질 <small>도파민</small>', G.deep, Vx(-0.08,-0.31,0.12), {color:'#B48CC8', dx:60, dy:110});
     L3('striat','선조체 = 미상핵 + 조가비핵', G.deep, Vx(-0.3,0.2,-0.3), {color:'#5ED6A8', dx:-60, dy:-150});
     L3('thal','시상 <small>감각 중계소</small>', G.deep, Vx(-0.12,0.05,0.14), {color:'#7FB2FF', dx:-120, dy:-90});
@@ -255,6 +391,7 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
       do(){ W.brain({glow:0.25}); W.part(['cerebellum','midbrain','pons','medulla','cordTop','cordLong'],{em:0.12}); W.fib('pns',1); W.lbl('pns'); on('#tr1',false); on('#tr2'); sfx('zap'); }},
     {id:'1-04', s:'N', t:'말초신경계는 체성신경계와 자율신경계로 나뉩니다. 체성신경계에는 뇌신경 12쌍과 척수신경 31쌍이 있습니다.', do(){ on('#tr2',false); on('#tr3'); sfx('pop'); }},
     {id:'1-05', s:'N', t:'자율신경계는 교감신경과 부교감신경입니다. 교감신경은 기능을 촉진하고 부교감신경은 기능을 감소시켜, 서로 반대로 작용하는 길항작용으로 항상성을 유지합니다.', do(){ on('#tr3',false); on('#tr4'); sfx('pop'); }},
+    {id:'1-05a', s:'N', t:'예를 들어 긴장한 상황에서는 교감신경이 동공을 키우고 심박을 높입니다. 쉬고 소화할 때는 부교감신경이 동공을 줄이고 심박을 낮춥니다.', do(){ on('#yy1'); later(()=>{ on('#yy2'); sfx('pop'); },2600); sfx('pop'); }},
     /* B. 뉴런 */
     {id:'1-06', s:'N', t:'신경계의 기본 단위는 신경세포, 뉴런입니다.',
       do(S){ on('#tree',false); S.lbOff(); W.shift(0); W.brain({glow:0}); W.show({brain:false, cns:false, neuron:true}); S.allNeuron(); W.view('neuron',0); W.cam([0.25,1.4,8.2],[0.25,0,0],0); later(()=>W.view('neuron',2200),50); sfx('whoosh'); }},
@@ -264,7 +401,7 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
     {id:'1-10', s:'N', t:'축삭을 감싼 미엘린 수초는 전기 신호가 새지 않도록 절연합니다.', do(S){ S.dimNeuron(['myelin','axon']); W.view('axon'); W.lbl('axon',false); W.lbl('myel'); sfx('pop'); }},
     {id:'1-11', s:'N', t:'수초와 수초 사이의 틈이 랑비에 결절입니다. 신호가 결절에서 결절로 건너뛰듯 전달되어, 전달 속도가 빨라집니다.',
       do(S){ S.dimNeuron(['node','myelin','axon']); W.lbl('node'); W.fx({signal:true, sigT:0}); sfx('zap'); }},
-    {id:'1-12', s:'N', t:'이렇게 뉴런 안에서는 전기 신호로 전달되지만,', do(S){ S.allNeuron(); W.lbl(['myel','node'],false); W.view('neuron'); }},
+    {id:'1-12', s:'N', t:'이렇게 뉴런 안에서는 전기 신호로 전달됩니다.', do(S){ S.allNeuron(); W.lbl(['myel','node'],false); W.view('neuron'); }},
     {id:'1-13', s:'N', t:'뉴런과 뉴런이 만나는 신경연접, 즉 시냅스에서는 신경전달물질이라는 화학 신호로 바뀌어 건너갑니다.',
       do(S){ W.view('synapse',2000); W.fx({synapse:true}); S.dimNeuron(['term','post']); W.lbl(['term','syn','post']); sfx('glow'); }},
     {id:'1-14', s:'N', t:'뉴런은 기능에 따라 세 가지입니다. 감각뉴런은 정보를 중추로 보내는 구심성, 운동뉴런은 중추의 명령을 근육으로 보내는 원심성, 중간뉴런은 그 둘을 연결합니다.',
@@ -280,14 +417,14 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
     /* D. 뇌의 큰 구분 */
     {id:'1-19', s:'N', t:'이제 뇌 전체를 보겠습니다. 뇌는 대뇌, 간뇌, 뇌간, 소뇌로 나뉩니다.',
       do(){ on('#gw',false); W.show({brain:true}); W.brain({op:1}); W.view('front3q',0); W.cam([-5,2.2,-5],[0,-0.2,0],0); later(()=>W.view('front3q',2000),30); W.spin(0.16); sfx('whoosh'); }},
-    {id:'1-20', s:'N', t:'가장 크고 바깥을 덮고 있는 것이 대뇌,', do(){ W.brain({glow:0.8}); W.lbl('cerebrum'); sfx('glow'); }},
+    {id:'1-20', s:'N', t:'가장 크고 바깥을 덮고 있는 것이 대뇌입니다.', do(){ W.brain({glow:0.8}); W.lbl('cerebrum'); sfx('glow'); }},
     {id:'1-21', s:'N', t:'대뇌 안쪽 깊숙이, 뇌의 한가운데에는 간뇌가 있습니다.',
       do(S){ W.brain({glow:0, op:0.16}); W.show({deep:true}); S.deepOnly(['thalamus','hypothalamus']); W.lbl('cerebrum',false); W.lbl('dien'); W.spin(0); W.view('xray'); sfx('glow'); }},
-    {id:'1-22', s:'N', t:'그 아래, 척수와 이어지는 줄기가 뇌간이고,', do(S){ S.deepOnly([],0.15); W.lbl('dien',false); W.part(['midbrain','pons','medulla'],{em:0.6}); W.lbl('bstem'); W.view('stem'); sfx('glow'); }},
+    {id:'1-22', s:'N', t:'그 아래, 척수와 이어지는 줄기가 뇌간입니다.', do(S){ S.deepOnly([],0.15); W.lbl('dien',false); W.part(['midbrain','pons','medulla'],{em:0.6}); W.lbl('bstem'); W.view('stem'); sfx('glow'); }},
     {id:'1-23', s:'N', t:'뇌간 뒤쪽 아래에 자리한 것이 소뇌입니다.', do(){ W.part(['midbrain','pons','medulla'],{em:0}); W.lbl('bstem',false); W.brain({op:1}); W.show({deep:false}); W.part('cerebellum',{em:0.55}); W.lbl('cereb'); W.view('cereb'); sfx('glow'); }},
     /* E. 대뇌 4엽 */
     {id:'1-24', s:'N', t:'대뇌는 가운데의 대뇌세로열을 기준으로 좌우 두 반구로 나뉩니다.', do(){ W.part('cerebellum',{em:0}); W.lbl('cereb',false); W.view('top',2000); W.lbl('lfiss'); sfx('whoosh'); }},
-    {id:'1-25', s:'N', t:'옆에서 보면, 앞쪽과 뒤쪽을 나누는 중심고랑, 롤란도열이 있고,', do(){ W.lbl('lfiss',false); W.view('lateralL',2000); later(()=>{ W.brain({cs:1}); W.lbl('cs'); sfx('glow'); },1200); }},
+    {id:'1-25', s:'N', t:'옆에서 보면 앞쪽과 뒤쪽을 나누는 중심고랑, 즉 롤란도열이 있습니다.', do(){ W.lbl('lfiss',false); W.view('lateralL',2000); later(()=>{ W.brain({cs:1}); W.lbl('cs'); sfx('glow'); },1200); }},
     {id:'1-26', s:'N', t:'아래쪽 측두엽을 나누는 외측고랑, 실비우스열이 있습니다.', do(){ W.brain({lf:1}); W.lbl('lf'); sfx('glow'); }},
     {id:'1-27', s:'N', t:'이 고랑들을 경계로, 대뇌는 네 개의 엽으로 나뉩니다.', do(){ W.brain({cs:0.35, lf:0.35}); W.lbl(['cs','lf'],false); W.lobes([0,1,2,3]); sfx('levelup'); }},
     {id:'1-28', s:'N', t:'앞쪽의 전두엽은 판단과 계획, 그리고 운동을 담당합니다.', do(){ W.lobes([0],true); W.lbl('lobe0'); sfx('pop'); }},
@@ -297,28 +434,67 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
     {id:'1-32', s:'N', t:'그리고 외측고랑 깊숙한 곳에는, 다섯 번째 엽이라 불리는 섬엽, 도엽이 숨어 있습니다.', do(){ W.lobes([0,1,2,3]); W.lbl('lobe3',false); W.brain({lf:0.9}); W.lbl('ins'); sfx('pop'); }},
     /* F. 브로드만 */
     {id:'1-33', s:'N', t:'이제 국시 단골, 브로드만 영역 번호입니다. 위치와 번호를 함께 기억해 주세요.', do(){ W.lbl('ins',false); W.brain({lobe:[0.3,0.3,0.3,0.3], dim:[0,0,0,0], cs:0.6, lf:0.6}); sfx('whoosh'); }},
-    {id:'1-34', s:'N', t:'중심고랑 바로 앞, 4번은 일차운동영역입니다. 그 앞의 6번은 운동을 준비하는 전운동영역과 보조운동영역입니다.', do(S){ S.ba(['4','6']); sfx('pop'); }},
-    {id:'1-35', s:'N', t:'전두엽 아래쪽의 44번과 45번은, 말을 산출하는 브로카 영역입니다.', do(S){ S.ba(['44']); W.brain({lobe:[0.75,0.3,0.3,0.3]}); sfx('pop'); }},
-    {id:'1-36', s:'N', t:'중심고랑 바로 뒤, 3, 1, 2번은 일차체감각영역입니다.', say:'중심고랑 바로 뒤, 삼, 일, 이 번은 일차체감각영역입니다.', do(S){ S.ba(['312']); W.brain({lobe:[0.3,0.75,0.3,0.3]}); sfx('pop'); }},
+    {id:'1-34', s:'N', t:'중심고랑 바로 앞, 4번은 일차운동영역입니다. 그 앞의 6번은 운동을 준비하는 전운동영역과 보조운동영역입니다.', do(S){ W.view('lateralL',1200); S.ba(['4','6']); sfx('pop'); }},
+    {id:'1-34a', s:'N', t:'6번 앞의 8번도 전운동영역에 함께 묶입니다. 이마 쪽 맨 앞의 9번과 10번은 기억과 사고, 판단을 맡는 전전두 연합영역입니다.',
+      say:'육 번 앞의 팔 번도 전운동영역에 함께 묶입니다. 이마 쪽 맨 앞의 구 번과 십 번은 기억과 사고, 판단을 맡는 전전두 연합영역입니다.', do(S){ S.ba(['8','9','10']); sfx('pop'); }},
+    {id:'1-35', s:'N', t:'전두엽 아래쪽의 44번과 45번은, 말을 산출하는 브로카 영역입니다.', do(S){ S.ba(['44','45']); W.brain({lobe:[0.75,0.3,0.3,0.3]}); W.cam([-4.1,0.05,-1.3],[0,-0.08,-0.42],1800); sfx('pop'); }},
+    {id:'1-35a', s:'N', t:'브로카 영역은 전두엽의 하전두이랑에 있고, 중대뇌동맥에서 혈액을 받습니다. 44번은 뒷쪽의 덮개부, 45번은 앞쪽의 삼각부입니다.',
+      say:'브로카 영역은 전두엽의 하전두이랑에 있고, 중대뇌동맥에서 혈액을 받습니다. 사십사 번은 뒷쪽의 덮개부, 사십오 번은 앞쪽의 삼각부입니다.', do(){ sfx('glow'); }},
+    {id:'1-36', s:'N', t:'중심고랑 바로 뒤, 3, 1, 2번은 일차체감각영역입니다.', say:'중심고랑 바로 뒤, 삼, 일, 이 번은 일차체감각영역입니다.', do(S){ W.view('lateralL',1500); S.ba(['312']); W.brain({lobe:[0.3,0.75,0.3,0.3]}); sfx('pop'); }},
+    {id:'1-36a', s:'N', t:'그 뒤쪽 위의 5번과 7번은, 들어온 감각을 종합해 해석하는 체감각연합영역입니다.', say:'그 뒤쪽 위의 오 번과 칠 번은, 들어온 감각을 종합해 해석하는 체감각연합영역입니다.', do(S){ S.ba(['5','7']); sfx('pop'); }},
     {id:'1-37', s:'N', t:'두정엽 아래 뒤쪽의 39번 각회는 읽기와 관련됩니다.', do(S){ S.ba(['39']); sfx('pop'); }},
-    {id:'1-38', s:'N', t:'측두엽 위쪽의 41번은 일차청각영역, 42번은 청각연합영역이고,', do(S){ S.ba(['41','42']); W.brain({lobe:[0.3,0.3,0.75,0.3]}); sfx('pop'); }},
+    {id:'1-38', s:'N', t:'측두엽 위쪽의 41번은 일차청각영역, 42번은 청각연합영역입니다.', do(S){ S.ba(['41','42']); W.brain({lobe:[0.3,0.3,0.75,0.3]}); sfx('pop'); }},
     {id:'1-39', s:'N', t:'그 뒤쪽의 22번이, 언어 이해를 담당하는 베르니케 영역입니다.', do(S){ S.ba(['22']); sfx('ding'); }},
-    {id:'1-40', s:'N', t:'후두엽의 17번은 일차시각영역, 18번과 19번은 시각연합영역입니다.', do(S){ S.ba(['17','18']); W.brain({lobe:[0.3,0.3,0.3,0.75]}); sfx('pop'); }},
+    {id:'1-40', s:'N', t:'후두엽의 17번은 일차시각영역, 18번과 19번은 시각연합영역입니다.', do(S){ S.ba(['17','18','19']); W.brain({lobe:[0.3,0.3,0.3,0.75]}); sfx('pop'); }},
     {id:'1-41', s:'N', t:'한 번에 정리해 볼까요? 운동 4, 브로카 44와 45, 체감각 3, 1, 2, 각회 39, 청각 41과 42, 베르니케 22, 시각 17입니다.',
       say:'한 번에 정리해 볼까요? 운동 사, 브로카 사십사와 사십오, 체감각 삼, 일, 이, 각회 삼십구, 청각 사십일과 사십이, 베르니케 이십이, 시각 십칠입니다.',
-      do(S){ W.lblAllOff(); S.ba(['4','6','44','312','39','41','42','22','17','18']); W.lblAllOff(); W.brain({lobe:[0.55,0.55,0.55,0.55]}); W.shift(-330); later(()=>{ on('#btab'); sfx('ding'); },500);
-        seq([['4'],['44'],['312'],['39'],['41','42'],['22'],['17'],['6','18']].map(g=>()=>{ W.lbl(g.map(x=>'bn'+x)); sfx('pop'); }), 1250); }},
+      do(S){ W.lblAllOff(); S.ba(S.BA_IDS); W.lblAllOff(); W.brain({lobe:[0.55,0.55,0.55,0.55]}); W.shift(-330); later(()=>{ on('#btab'); sfx('ding'); },500);
+        seq([['4'],['44','45'],['312'],['39'],['41','42'],['22'],['17'],['6','8','9','10'],['5','7','18','19']].map(g=>()=>{ W.lbl(g.map(x=>'bn'+x)); sfx('pop'); }), 1150); }},
+    /* F2. 일차운동영역 · 일차체감각영역 자세히 */
+    {id:'1-41a', s:'N', t:'이제 시험에 자주 나오는 일차운동영역과 일차체감각영역을 조금 더 자세히 보겠습니다.',
+      do(S){ on('#btab',false); W.lblAllOff(); S.ba(S.BA_IDS,false); W.shift(0); W.brain({lobe:[0,0,0,0], dim:[0,0,0,0], cs:1, lf:0.4}); W.cam([-3.9,1.55,-0.15],[0,0.18,0.0],2200); sfx('whoosh'); }},
+    {id:'1-41b', s:'N', t:'중심고랑을 경계로, 바로 앞의 중심앞이랑이 4번 일차운동영역이고, 바로 뒤의 중심뒤이랑이 3, 1, 2번 일차체감각영역입니다.',
+      say:'중심고랑을 경계로, 바로 앞의 중심앞이랑이 사 번 일차운동영역이고, 바로 뒤의 중심뒤이랑이 삼, 일, 이 번 일차체감각영역입니다.',
+      do(){ W.lbl('cs2'); seq([()=>{ W.part('strip4',{op:0.9}); W.lbl('st4'); sfx('glow'); },()=>{ W.part('strip312',{op:0.9}); W.lbl('st312'); sfx('glow'); }],1700); }},
+    {id:'1-41c', s:'N', t:'일차운동영역에는 상부운동신경원의 세포체가 모여 있습니다. 수의운동 명령이 여기서 만들어져, 추체로를 따라 뇌간과 척수로 내려갑니다.',
+      do(){ W.lbl(['cs2','st312'],false); W.part('strip312',{op:0.3}); W.part('strip4',{op:1, em:1}); sfx('zap'); }},
+    {id:'1-41d', s:'N', t:'일차체감각영역은 피부와 근육, 관절에서 올라온 촉각과 통증, 온도, 위치 감각을 시상을 거쳐 처음으로 받아들입니다.',
+      do(){ W.lbl('st4',false); W.part('strip4',{op:0.3}); W.part('strip312',{op:1}); W.lbl('st312'); sfx('glow'); }},
+    {id:'1-41e', s:'N', t:'두 영역은 모두 몸의 반대쪽을 담당합니다. 그래서 왼쪽 반구가 손상되면 오른쪽 몸에 마비와 감각 저하가 나타나는데, 이것을 대측 지배라고 합니다.',
+      do(){ W.lblAllOff(); W.part(['strip4','strip312'],{op:0.9}); W.shift(-330); later(()=>{ on('#contra'); sfx('whoosh'); },500); }},
+    {id:'1-41f', s:'N', t:'또 이 띠 위에는 몸의 각 부위가 순서대로 배치된 지도가 있습니다. 이것을 체부위 배열, 또는 호문쿨루스라고 합니다.',
+      do(){ on('#contra',false); W.part('strip312',{op:0.3}); W.part('strip4',{op:0.95}); later(()=>{ on('#homu'); sfx('whoosh'); },450); }},
+    {id:'1-41g', s:'N', t:'위에서부터 보면, 대뇌세로열 안쪽 면에는 발과 다리가 있고, 그 아래로 몸통과 팔, 손이 이어집니다. 가장 아래쪽 외측고랑 가까이에는 얼굴과 입술, 혀, 그리고 삼킴에 관여하는 인두와 후두가 있습니다.',
+      do(S){ $('#homu').classList.add('m'); seq(S.HB.map(h=>()=>{ W.lbl(h); sfx('pop'); }), 1500); }},
+    {id:'1-41h', s:'N', t:'각 부위가 차지하는 넓이는 몸의 실제 크기가 아니라, 얼마나 정교하게 움직이고 느끼는지에 비례합니다. 그래서 섬세한 손과 입술, 혀의 영역이 유난히 넓습니다.',
+      do(){ zoom(1340,330,1.3,1500); sfx('glow'); }},
+    {id:'1-41i', s:'N', t:'운동 호문쿨루스와 감각 호문쿨루스는 거의 같은 순서로 나란히 놓입니다. 운동 쪽은 움직임의 정교함, 감각 쪽은 감각의 예민함에 따라 넓이가 정해집니다.',
+      do(){ zoomOut(1200); $('#homu').classList.add('s'); W.part('strip312',{op:0.9}); sfx('pop'); }},
+    {id:'1-41j', s:'N', t:'말과 관련해 꼭 기억할 곳은 아래쪽입니다. 일차운동영역의 아래쪽 외측 부분이 입술과 혀, 턱, 후두를 움직이므로, 이곳이 손상되면 말운동에 문제가 생깁니다. 바로 앞에는 브로카 영역이 이웃해 있습니다.',
+      do(S){ on('#homu',false); W.lblAllOff(); W.shift(0); W.part('strip312',{op:0.25}); W.part('strip4',{op:0.95}); W.cam([-3.6,0.2,-0.7],[0,-0.02,-0.12],2000); S.ba(['44','45']); W.lbl(['ba44','ba45'],false);
+        later(()=>{ W.lbl(['hb4','aB']); sfx('glow'); },1300); }},
+    {id:'1-41k', s:'N', t:'일차운동영역 앞의 6번은 운동을 준비하는 곳입니다. 바깥쪽의 전운동영역은 감각 정보에 맞춰 운동을 준비하고, 안쪽 윗면의 보조운동영역은 스스로 시작하는 움직임과 그 순서를 계획합니다.',
+      say:'일차운동영역 앞의 육 번은 운동을 준비하는 곳입니다. 바깥쪽의 전운동영역은 감각 정보에 맞춰 운동을 준비하고, 안쪽 윗면의 보조운동영역은 스스로 시작하는 움직임과 그 순서를 계획합니다.',
+      do(S){ W.lblAllOff(); S.ba(['44','45'],false); W.part('strip4',{op:0.6, em:0}); W.part('strip312',{op:0}); W.brain({lobe:[0.7,0,0,0], dim:[0,0.5,0.5,0.5], cs:0.8}); W.shift(-330); W.cam([-3.3,3.1,-1.3],[0,0.2,-0.1],2000);
+        later(()=>{ on('#sma'); W.lbl(['pm','sma']); S.ba(['6']); W.lbl('ba6',false); sfx('pop'); },900); }},
+    {id:'1-41l', s:'N', t:'보조운동영역은 전대뇌동맥이 혈액을 대는 안쪽 면에 있습니다. 이곳이 손상되면 말을 시작하기 어려운 연결피질운동실어증이 나타날 수 있습니다.',
+      do(){ on('#smaX'); sfx('ding'); }},
+    {id:'1-41m', s:'N', t:'이처럼 운동 계획은 연합피질에서 세워져 일차운동피질로 전달됩니다. 일차피질은 정보를 처음 처리하고, 연합피질은 그 정보를 통합하고 해석합니다.',
+      do(S){ on('#sma',false); on('#smaX',false); W.lblAllOff(); S.ba(['6'],false); W.part('strip4',{op:0}); W.brain({lobe:[0.45,0.45,0.45,0.45], dim:[0,0,0,0], cs:0.5}); W.view('lateralL',1800); later(()=>{ on('#prim'); sfx('pop'); },500); }},
+    {id:'1-41n', s:'N', t:'감각도 마찬가지입니다. 일차체감각영역 뒤의 5번과 7번 체감각연합영역이 감각을 종합해, 눈을 감고도 손에 쥐 물건이 무엇인지 알아차리게 합니다.',
+      say:'감각도 마찬가지입니다. 일차체감각영역 뒤의 오 번과 칠 번 체감각연합영역이 감각을 종합해, 눈을 감고도 손에 쥐 물건이 무엇인지 알아차리게 합니다.',
+      do(S){ W.part('strip312',{op:0.85}); S.ba(['312','5','7']); W.lbl('ba312',false); W.lbl(['bn312','ba5','ba7']); W.brain({lobe:[0.2,0.8,0.2,0.2]}); sfx('pop'); }},
     /* G. 신경섬유 */
     {id:'1-42', s:'N', t:'뇌의 여러 영역은 축삭 다발, 신경섬유로 서로 연결됩니다. 신경섬유는 세 종류입니다.',
-      do(S){ on('#btab',false); W.lblAllOff(); S.ba(['4','6','44','312','39','41','42','22','17','18'],false); W.shift(0); W.brain({lobe:[0,0,0,0], cs:0, lf:0, op:0.13}); W.view('xray',2000); sfx('whoosh'); }},
+      do(S){ on('#btab',false); on('#prim',false); W.lblAllOff(); S.ba(S.BA_IDS,false); W.part(['strip4','strip312'],{op:0, em:0}); W.shift(0); W.brain({lobe:[0,0,0,0], dim:[0,0,0,0], cs:0, lf:0, op:0.13}); W.view('xray',2000); sfx('whoosh'); }},
     {id:'1-43', s:'N', t:'투사섬유는 대뇌피질과 피질 아래 구조를 위아래로 연결합니다. 부챗살처럼 퍼져 있어 방사관이라고도 합니다.', do(){ W.fib('proj',1); W.lbl('fproj'); sfx('zap'); }},
     {id:'1-44', s:'N', t:'교련섬유는 좌우 반구를 연결합니다. 대표적인 예가 뇌량입니다.', do(S){ W.fib('proj',0.12); W.lbl('fproj',false); W.fib('comm',1); W.show({deep:true}); S.deepOnly(['callosum'],0); W.lbl('fcomm'); W.cam([-2.2,2.6,-2.6],[0,0.05,0],1800); sfx('zap'); }},
     {id:'1-45', s:'N', t:'연합섬유는 같은 반구 안의 영역끼리 연결합니다. 대표적인 것이 브로카 영역과 베르니케 영역을 잇는 궁상속입니다.',
       do(S){ W.fib('comm',0); W.fib('proj',0); S.deepOnly([],0); W.lbl('fcomm',false); W.fib('assoc',1); W.brain({op:0.28, lobe:[0.5,0,0.5,0]}); W.view('lateralL',2000); later(()=>{ W.lbl(['fassoc','aB','aW']); sfx('zap'); },900); }},
     {id:'1-46', s:'N', t:'궁상속이 손상되면 말하기와 이해는 비교적 되지만, 따라 말하기가 어려운 전도실어증이 나타납니다.',
-      do(){ W.arcCut(true); sfx('cut'); add(`<div class="cutx fade on" id="cutx" style="left:50%;top:42%">✂️</div>`); }},
+      do(){ W.arcCut(true); sfx('cut'); add(`<div class="cutx fade on" id="cutx" style="left:50%;top:42%">✂️</div>`); zoom(800,380,1.25,1400); }},
     {id:'1-47', s:'N', t:'정리하면, 투사섬유는 위아래, 교련섬유는 좌우, 연합섬유는 같은 반구 안입니다.',
-      do(){ $('#cutx')&&$('#cutx').remove(); W.arcCut(false); W.lblAllOff(); W.brain({op:0.13, lobe:[0,0,0,0]}); W.fib('proj',0.7); W.fib('comm',0.7); W.fib('assoc',0.9); W.view('xray',1800); W.spin(0.12); later(()=>{ on('#fsum'); sfx('ding'); },600); }},
+      do(){ zoomOut(1100); $('#cutx')&&$('#cutx').remove(); W.arcCut(false); W.lblAllOff(); W.brain({op:0.13, lobe:[0,0,0,0]}); W.fib('proj',0.7); W.fib('comm',0.7); W.fib('assoc',0.9); W.view('xray',1800); W.spin(0.12); later(()=>{ on('#fsum'); sfx('ding'); },600); }},
     /* H. 기저핵 */
     {id:'1-48', s:'N', t:'이번에는 대뇌 깊숙한 곳, 피질 아래의 회백질 덩어리인 기저핵입니다.',
       do(S){ on('#fsum',false); W.spin(0); ['proj','comm','assoc'].forEach(f=>W.fib(f,0)); W.brain({op:0.1}); W.show({deep:true}); S.deepOnly(['caudate','putamen','pallidus'],0.12); W.view('deep',2000); sfx('whoosh'); }},
@@ -332,6 +508,7 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
     {id:'1-52', s:'N', t:'기저핵 안쪽, 뇌의 한가운데에는 간뇌가 있습니다. 간뇌는 시상, 시상하부, 시상상부로 나뉩니다.',
       do(S){ on('#see',false); W.shift(0); W.lblAllOff(); S.deepOnly(['thalamus','hypothalamus','pineal'],0.1); W.cam([-1.7,0.7,-1.9],[0,-0.06,0.08],1800); sfx('whoosh'); }},
     {id:'1-53', s:'N', t:'시상은 냄새, 즉 후각을 제외한 모든 감각 정보를 대뇌피질로 보내는 중계소입니다.', do(){ W.part('thalamus',{em:0.8}); W.lbl('thal'); sfx('glow'); }},
+    {id:'1-53a', s:'N', t:'시상은 감각만 중계하지 않습니다. 기저핵과 소뇌에서 온 운동 정보도 시상을 거쳐 대뇌의 운동피질로 전달됩니다.', do(){ W.part('thalamus',{em:1}); sfx('glow'); }},
     {id:'1-54', s:'N', t:'시상하부는 감정과 자율신경, 그리고 체온과 배고픔 같은 몸의 항상성을 조절합니다.', do(){ W.part('thalamus',{em:0.2}); W.part('hypothalamus',{em:0.8}); W.lbl('hypo'); sfx('glow'); }},
     {id:'1-55', s:'N', t:'시상상부에는, 수면 호르몬인 멜라토닌을 만드는 송과선이 있습니다.', do(){ W.part('hypothalamus',{em:0.2}); W.part('pineal',{em:0.9}); W.lbl('pin'); sfx('glow'); }},
     /* J. 뇌간 */
@@ -340,6 +517,7 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
         later(()=>{ seq([()=>{W.lbl('mid');sfx('pop')},()=>{W.lbl('pon');sfx('pop')},()=>{W.lbl('med');sfx('pop')}],900); on('#cn'); },900); }},
     {id:'1-57', s:'N', t:'중뇌는 시각과 청각 반사의 중추로, 3번과 4번 뇌신경이 시작됩니다.', do(S){ S.stem(['midbrain']); on('#lv1'); sfx('glow'); }},
     {id:'1-58', s:'N', t:'뇌교는 대뇌와 소뇌를 잇는 다리 역할을 하고, 5번부터 8번 뇌신경이 나옵니다.', do(S){ S.stem(['pons']); on('#lv1',false); on('#lv2'); sfx('glow'); }},
+    {id:'1-58a', s:'N', t:'뇌교는 얼굴의 감각과 씹기 운동, 얼굴 표정에도 관여해, 말과 삼킴에 중요합니다.', do(){ sfx('glow'); }},
     {id:'1-59', s:'N', t:'연수는 호흡, 삼킴, 발성, 심장 박동을 조절하는 생명 중추입니다. 운동신경이 반대쪽으로 교차하는 곳이며, 9번부터 12번 뇌신경이 나옵니다.', do(S){ S.stem(['medulla']); on('#lv2',false); on('#lv3'); sfx('glow'); }},
     {id:'1-60', s:'N', t:'그래서 12쌍의 뇌신경 가운데 1번 후신경과 2번 시신경을 뺀 10쌍이 뇌간에서 나옵니다. 뇌신경은 다음 편에서 자세히 다룹니다.', do(S){ S.stem(['midbrain','pons','medulla']); on('#lv3',false); on('#cnx'); sfx('ding'); }},
     /* K. 소뇌 */
@@ -350,9 +528,10 @@ CLIPS.push({ code:'1-1', short:'1-1 뇌의 구조', title:'신경해부생리 �
     {id:'1-63', s:'N', t:'오늘 배운 내용을 한 장으로 정리합니다.',
       do(){ on('#cbc',false); on('#hd',false); W.lblAllOff(); W.part('cerebellum',{em:0}); W.brain({op:0}); W.shift(0); later(()=>{ W.show({brain:false}); on('#sum'); sfx('ding'); },500); }, gap:2600},
     ...quizSteps('q11_0', Q11[0], ()=>{ on('#sum',false); }),
-    ...quizSteps('q11_1', Q11[1], ()=>on('#q11_0',false)),
-    ...quizSteps('q11_2', Q11[2], ()=>on('#q11_1',false)),
-    ...quizSteps('q11_3', Q11[3], ()=>on('#q11_2',false)),
+    ...quizSteps('q11_4', Q11[1], ()=>on('#q11_0',false)),
+    ...quizSteps('q11_1', Q11[2], ()=>on('#q11_4',false)),
+    ...quizSteps('q11_2', Q11[3], ()=>on('#q11_1',false)),
+    ...quizSteps('q11_3', Q11[4], ()=>on('#q11_2',false)),
     {id:'1-64', s:'N', t:'수고하셨습니다. 다음 시간에는 뇌신경 12쌍과, 상부·하부 운동신경을 잇는 운동 경로를 살펴봅니다.', do(){ on('#q11_3',false); W.show({brain:true}); W.brain({op:1, lobe:[0,0,0,0]}); W.view('front3q',0); W.spin(0.2); }},
     {wait:2000},
   ]});

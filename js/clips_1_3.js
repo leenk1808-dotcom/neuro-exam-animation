@@ -11,6 +11,8 @@ function vesselScene(S){
     <rect id="tisU" x="1010" y="50" width="170" height="120" rx="22" fill="#E7B2A5"/><text id="tisUt" x="1095" y="118" text-anchor="middle" font-size="22" font-weight="800" fill="#5A2A2A">뇌 조직</text>
     <rect id="tisL" x="1010" y="270" width="170" height="120" rx="22" fill="#E7B2A5"/><text id="tisLt" x="1095" y="338" text-anchor="middle" font-size="22" font-weight="800" fill="#5A2A2A">뇌 조직</text>
     <circle id="bleedC" cx="820" cy="330" r="10" fill="url(#bleed)" opacity="0"/>
+    <g id="lac" style="opacity:0;transition:opacity .8s"><path d="M330 240 C 336 300, 330 340, 336 372" stroke="#7A2433" stroke-width="16" fill="none"/><path d="M330 240 C 336 300, 330 340, 336 372" stroke="#2A0A12" stroke-width="8" fill="none"/>
+      <circle id="lacS" cx="336" cy="392" r="20" fill="#E7B2A5"/><text x="372" y="398" font-size="20" font-weight="800" fill="#FFE45C">가는 관통동맥 → 작은 병변</text></g>
     <path id="pm" d="M20 220 C 300 220, 450 220, 600 220" stroke="#7A2433" stroke-width="66" fill="none" stroke-linecap="round"/>
     <path id="pu" d="M600 220 C 760 220, 820 112, 1010 110" stroke="#7A2433" stroke-width="44" fill="none"/>
     <path id="pl" d="M600 220 C 760 220, 820 328, 1010 330" stroke="#7A2433" stroke-width="44" fill="none"/>
@@ -46,6 +48,8 @@ function vesselScene(S){
     svg.querySelector('#tisLt').style.transition='none';
   };
   S.vsTitle=(t)=>{ $('#vslT').innerHTML=t; };
+  S.vsP=pu55;
+  S.vsLac=(on)=>{ svg.querySelector('#lac').style.opacity=on?1:0; svg.querySelector('#lacS').setAttribute('fill', on?'#4A4450':'#E7B2A5'); };
   S.vsTag=(t,x,y)=>{ const e=svg.querySelector('#ltag'); e.textContent=t||''; e.setAttribute('x',x||0); e.setAttribute('y',y||0); };
   let last=performance.now();
   function tick(now){ if(!svg.isConnected) return; requestAnimationFrame(tick); const dt=Math.min(0.05,(now-last)/1000); last=now; if(ENGINE.paused()) return;
@@ -78,6 +82,7 @@ function meningesScene(S){
     <g class="ly" id="ly6"><path d="${gy}" stroke="#F28C8C" stroke-width="7" fill="none"/><path d="${cortex}" fill="#E7B2A5"/><text x="1180" y="420" text-anchor="end" class="mtag" fill="#5A2A2A">대뇌피질 (연막이 뇌 표면에 밀착)</text></g>
     <g class="hm" id="edh"><path d="M140 134 Q300 214 460 134 Z" fill="#8E1022" stroke="#C8102E" stroke-width="3"/><text x="300" y="232" text-anchor="middle" class="mtag" fill="#FFE45C">경막외 혈종 (두개골 ↔ 경막)</text></g>
     <g class="hm" id="sdh"><path d="M380 160 Q720 200 1060 160 Q720 174 380 160 Z" fill="#A3162B" stroke="#E0384E" stroke-width="3"/><text x="720" y="225" text-anchor="middle" class="mtag" fill="#FFE45C">경막하 혈종 (경막 ↔ 지주막)</text></g>
+    <g class="hm" id="mgt"><rect x="0" y="134" width="1200" height="166" fill="#FF8A3A" opacity=".38"/><text x="600" y="250" text-anchor="middle" class="mtag" fill="#FFE45C">뇌수막염 · 뇌막의 염증 (감염)</text></g>
     <g class="hm" id="sah"><rect x="320" y="185" width="560" height="113" fill="#B0152C" opacity=".72"/><text x="600" y="245" text-anchor="middle" class="mtag" fill="#FFE45C">지주막하 출혈 (지주막 아래)</text></g>
   </svg></div></div>`);
   const g=$('#csf'); const dots=[];
@@ -85,7 +90,7 @@ function meningesScene(S){
   let last=performance.now();
   (function tick(now){ if(!g.isConnected) return; requestAnimationFrame(tick); const dt=Math.min(0.05,(now-last)/1000); last=now; if(ENGINE.paused()) return; dots.forEach(d=>{ d.x=(d.x+d.v*dt)%1200; d.el.setAttribute('cx',d.x); d.el.setAttribute('cy',d.y+4*Math.sin(d.x/30)); }); })(last);
   S.ly=(n)=>{ for(let i=1;i<=6;i++) $('#ly'+i).classList.toggle('on', i<=n); };
-  S.hm=(id)=>{ ['edh','sdh','sah'].forEach(k=>$('#'+k).classList.toggle('on', k===id)); };
+  S.hm=(id)=>{ ['edh','sdh','sah','mgt'].forEach(k=>$('#'+k).classList.toggle('on', k===id)); };
 }
 
 const Q13=[
@@ -97,6 +102,8 @@ const Q13=[
    say:'후대뇌동맥이 손상되면 주로 어떤 증상이 나타날까요?', ex:'정답은 1번입니다. 후대뇌동맥은 후두엽을 담당해서 실독증과 시각장애가 나타납니다.'},
   {sec:7, q:'심장 등에서 떨어져 나온 덩어리가 혈관을 타고 흐르다가 좁은 혈관을 막아 생기는 뇌졸중은?', opts:['혈전증','색전증','뇌내출혈','지주막하 출혈','경막외 혈종'], ans:1,
    say:'심장 등에서 떨어져 나온 덩어리가 혈관을 타고 흐르다가, 좁은 혈관을 막아 생기는 뇌졸중은?', ex:'정답은 2번, 색전증입니다. 혈관 벽에 혈전이 쌓여 그 자리를 막는 것은 혈전증입니다.'},
+  {sec:7, q:'어지러움은 5분, 팔 마비는 10분, 발음 문제는 15분 만에 사라지고 영구 손상은 남지 않지만, 뇌졸중의 경고 신호로 보는 것은?', opts:['혈전증','색전증','일과성 허혈 발작 (TIA)','뇌내출혈','지주막하 출혈'], ans:2,
+   say:'어지러움은 5분, 팔 마비는 10분, 발음 문제는 15분 만에 사라지고, 영구 손상은 남지 않지만 뇌졸중의 경고 신호로 보는 것은 무엇일까요?', ex:'정답은 3번, 일과성 허혈 발작입니다. 증상이 사라져도 바로 의료 평가를 받아야 합니다.'},
   {sec:7, q:'뇌막을 바깥쪽부터 순서대로 바르게 나열한 것은?', opts:['경막 - 지주막 - 연막','연막 - 지주막 - 경막','지주막 - 경막 - 연막','경막 - 연막 - 지주막','연막 - 경막 - 지주막'], ans:0,
    say:'마지막 문제입니다. 뇌막을 바깥쪽부터 순서대로 바르게 나열한 것은?', ex:'정답은 1번, 경막, 지주막, 연막입니다. 뇌척수액은 지주막과 연막 사이의 지주막하강을 흐릅니다.'},
 ];
@@ -111,41 +118,83 @@ CLIPS.push({ code:'1-3', short:'1-3 뇌혈관', title:'신경해부생리 ③ �
       <div class="row" id="sy2" style="padding:8px 12px;border-radius:12px;margin-top:8px;transition:.4s"><b class="hl-g">추골-뇌저동맥계</b> · 뒤쪽 순환<br><span style="font-size:19px">쇄골하동맥 → 추골동맥 2개 → <b>뇌저동맥</b><br>→ 뇌간 · 소뇌 · PCA</span></div>
       <div class="row fade" id="sy3" style="margin-top:10px;padding:8px 12px;border-radius:12px;background:rgba(255,228,92,.12)"><b class="hl-y">윌리스환</b> · 두 계통을 잇는 고리<br><span style="font-size:19px">전교통동맥 = 좌우 ACA 연결<br>후교통동맥 = 같은 쪽 내경동맥 ↔ PCA</span></div></div>`);
     add(`<div class="glass cmp2 terrT fade" id="terrT"><h3>혈관별 담당 영역과 손상</h3><table>
-      <tr><td style="color:#4F8EF7">ACA<br>전대뇌동맥</td><td>뇌 안쪽 면 (전두·두정 내측) · 보조운동영역<br>→ <b>연결피질운동실어증</b> · 말실행증</td></tr>
-      <tr><td style="color:#FF5A5A">MCA<br>중대뇌동맥</td><td>실비안열 중심 외측면 대부분<br>→ <b>브로카 · 베르니케 · 전반실어증</b></td></tr>
-      <tr><td style="color:#B57BFF">PCA<br>후대뇌동맥</td><td>후두엽 · 측두엽 아래 · 시상<br>→ <b>실독증</b> · 시각장애</td></tr>
+      <tr><td style="color:#4F8EF7">ACA<br>전대뇌동맥</td><td>뇌 안쪽 면 (전두·두정 내측) · 보조운동영역<br>→ <b>연결피질운동실어증</b> · 말실행증 · 무동성 함구증</td></tr>
+      <tr><td style="color:#FF5A5A">MCA<br>중대뇌동맥</td><td>실비안열 중심 외측면 대부분<br>→ <b>브로카 · 베르니케 · 전반실어증</b> · 반대쪽 편마비</td></tr>
+      <tr><td style="color:#B57BFF">PCA<br>후대뇌동맥</td><td>후두엽 · 측두엽 아래 · 시상<br>→ <b>실독증</b>(순수 실독증) · 시각장애</td></tr>
       <tr><td style="color:#7FE0B0">소뇌동맥</td><td>상소뇌동맥 → 실조형 마비말장애<br>후하소뇌동맥 → 삼킴 · 마비말 · 음성장애</td></tr></table></div>`);
     add(`<div class="glass fade" id="mseg" style="right:56px;top:150px;width:540px"><h3>중대뇌동맥 (MCA)</h3>
       <div class="row">M1 · 기저핵 &nbsp;|&nbsp; M2 · 뇌섬 &nbsp;|&nbsp; M3 · 피질</div>
       <div class="row" style="margin-top:8px">M3 위쪽 → 일차운동 · <b class="hl-b">브로카</b> · 일차감각</div>
       <div class="row">M3 아래쪽 → <b class="hl-g">베르니케</b> · 두정엽 뒤</div>
-      <div class="row fade" id="mseg2" style="margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(255,90,90,.14)">위쪽 막힘 → 브로카 실어증<br>아래쪽 막힘 → 베르니케 실어증<br>M1·M2 막힘 (실비안열 주변 전체) → 전반실어증</div></div>`);
-    add(`<div class="glass fade" id="stk" style="left:50%;translate:-50% 0;top:560px;width:1240px;display:flex;gap:14px;padding:16px">
-      <div id="sk1" style="flex:1;padding:12px;border-radius:14px;background:rgba(79,142,247,.12);transition:.4s"><h3 class="hl-b" style="margin:0 0 6px">허혈성 (뇌경색)</h3><div class="row" style="font-size:19px">혈관이 좁아지거나(협착) 막혀서(폐색) 혈액 공급 중단<br>혈전증 · 색전증 · 일과성 허혈 발작(TIA)</div></div>
-      <div id="sk2" style="flex:1;padding:12px;border-radius:14px;background:rgba(255,90,90,.12);transition:.4s"><h3 class="hl-r" style="margin:0 0 6px">출혈성 (뇌출혈)</h3><div class="row" style="font-size:19px">혈관의 약한 지점이 터져 혈액이 밖으로<br>뇌내출혈(주로 고혈압) · 뇌외출혈(지주막하·경막하·경막외)</div></div></div>`);
-    add(`<div class="glass fade" id="tia" style="right:56px;top:120px;width:470px"><h3>일과성 허혈 발작 (TIA)</h3><div class="row" style="font-size:20px">증상이 잠깐 나타났다 사라짐<br>예) 어지러움 5분 · 팔 마비 10분 · 발음 15분 만에 사라짐<br>영구 손상은 없지만 <b class="hl-r">뇌졸중의 경고 신호</b></div></div>`);
-    add(`<div class="glass fade" id="kp" style="left:50%;translate:-50% 0;top:200px;width:1000px;text-align:center;padding:26px"><span class="pt" style="position:static;display:inline-block;margin-bottom:12px">국시 핵심</span>
+      <div class="row fade" id="mseg2" style="margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(255,90,90,.14)">위쪽 막힘 → 브로카 실어증<br>아래쪽 막힘 → 베르니케 실어증<br>M1·M2 막힘 (실비안열 주변 전체) → 전반실어증</div>
+      <div class="row fade" id="mseg3" style="margin-top:10px;padding:10px 12px;border-radius:12px;background:rgba(255,228,92,.12)">좌측 MCA 막힘 → <b class="hl-y">우측 편마비</b> (얼굴 · 팔)<br>+ 비유창 · 전보식 발화 (브로카 실어증)</div></div>
+    <div class="glass fade" id="acaN" style="right:56px;top:170px;width:470px"><h3 class="hl-b">ACA 영역이 넓게 손상되면</h3><div class="row" style="font-size:20px"><b>무동성 함구증</b><br>운동 능력은 남아 있지만<br>말과 행동을 스스로 시작하지 못함<br>· 한곳만 응시 · 반응이 거의 없음</div></div>
+    <div class="glass fade" id="pcaN" style="right:56px;top:150px;width:480px"><h3 style="color:#B57BFF">좌측 PCA 손상 · 순수 실독증</h3><div class="row" style="font-size:20px">좌측 후두엽 + 뇌량 팽대부 손상<br>시력 정상 · <b>쓰기는 되는데 읽기만 안 됨</b><br>= 실서증 없는 실독증</div></div>`);
+    add(`<div class="glass fade" id="stk" style="left:50%;translate:-50% 0;top:552px;width:1240px;display:flex;gap:14px;padding:14px 16px">
+      <div id="sk1" style="flex:1;padding:12px;border-radius:14px;background:rgba(79,142,247,.12);transition:.4s"><h3 class="hl-b" style="margin:0 0 6px">허혈성 (뇌경색) <span id="skF" class="fade" style="font-size:16px;padding:2px 10px;border-radius:10px;background:#4F8EF7;color:#fff;vertical-align:middle">훨씬 더 흔함</span></h3><div class="row" style="font-size:19px">혈관이 좁아지거나(협착) 막혀서(폐색) 혈액 공급 중단<br>혈전증 · 색전증 · 열공경색 · 일과성 허혈 발작(TIA)</div></div>
+      <div id="sk2" style="flex:1;padding:12px;border-radius:14px;background:rgba(255,90,90,.12);transition:.4s"><h3 class="hl-r" style="margin:0 0 6px">출혈성 (뇌출혈)</h3><div class="row" style="font-size:19px">혈관의 약한 지점이 터져 혈액이 밖으로 · 동맥류 파열<br>뇌내출혈(주로 고혈압) · 뇌외출혈(지주막하·경막하·경막외)</div></div></div>`);
+    add(`<style>
+      .t13{left:50%;translate:-50% 0;top:92px;width:1300px;display:flex;gap:22px;padding:20px 26px}
+      .t13 .tc{border-radius:16px;padding:14px 18px;background:rgba(255,255,255,.05)}
+      .t13 h3{margin:0 0 8px}
+      .t13 .tl{display:flex;align-items:center;gap:12px;margin:9px 0}
+      .t13 .tlk{width:118px;font-size:20px;font-weight:800;color:#DCE5FA}
+      .t13 .trk{flex:1;height:28px;border-radius:14px;background:rgba(255,255,255,.08);position:relative;overflow:hidden}
+      .t13 .bar{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:14px;background:linear-gradient(90deg,#FF5A5A,#FF8A6B);transition:width 1.5s linear, background .5s}
+      .t13 .tl.go .bar{width:var(--w)}
+      .t13 .tl.ok .bar{background:linear-gradient(90deg,#2FC48A,#7FE0B0)}
+      .t13 .tlv{width:178px;font-size:19px;font-weight:800;color:#7FE0B0;opacity:0;transition:opacity .4s}
+      .t13 .tl.ok .tlv{opacity:1}
+      .t13 .ax{display:flex;justify-content:space-between;margin:0 190px 0 130px;font-size:15px;color:#9FB2DA;font-weight:700}
+      .t13 .li{font-size:19px;line-height:1.55;font-weight:700;color:#DCE5FA}
+      .t13 .fade{transition:opacity .6s}
+      #vsl svg{height:418px}
+      .t13 .mv{position:relative;height:46px;margin:6px 0 4px;border-radius:23px;background:#2A0A12;border:5px solid #7A2433;overflow:hidden}
+      .t13 .mv i{position:absolute;top:12px;width:12px;height:12px;border-radius:6px;background:#FF4D5E;animation:t13f 3s linear infinite}
+      .t13 .mv b{position:absolute;left:58%;top:2px;width:34px;height:32px;border-radius:16px;background:#6A1424;border:3px solid #FF8A8A;box-shadow:0 0 12px rgba(255,90,90,.7);animation:t13c 4s ease-in-out infinite}
+      @keyframes t13f{from{transform:translateX(-20px)}to{transform:translateX(560px)}}
+      @keyframes t13c{0%,15%{opacity:0;transform:scale(.3)}30%,60%{opacity:1;transform:scale(1)}80%,100%{opacity:0;transform:scale(.3)}}
+    </style>`);
+    add(`<div class="glass fade t13" id="tia">
+      <div style="flex:1.2;display:flex;flex-direction:column;gap:12px">
+        <div class="tc"><h3>일과성 허혈 발작 (TIA) · <span class="hl-y">"미니 뇌졸중"</span></h3>
+          <div class="li">뇌로 가는 혈류가 <b>잠깐</b> 줄거나 막혔다가 다시 흐름 → 증상이 나타났다가 사라짐</div>
+          <div class="mv">${Array.from({length:9},(_,i)=>`<i style="animation-delay:-${(i/3).toFixed(2)}s"></i>`).join('')}<b></b></div></div>
+        <div class="tc"><h3 style="font-size:21px">예) 증상이 사라지기까지</h3>
+          <div class="tl" id="tl1" style="--w:33.3%"><span class="tlk">어지러움</span><div class="trk"><div class="bar"></div></div><span class="tlv">5분 만에 사라짐</span></div>
+          <div class="tl" id="tl2" style="--w:66.7%"><span class="tlk">팔 마비</span><div class="trk"><div class="bar"></div></div><span class="tlv">10분 만에 사라짐</span></div>
+          <div class="tl" id="tl3" style="--w:100%"><span class="tlk">발음 문제</span><div class="trk"><div class="bar"></div></div><span class="tlv">15분 만에 사라짐</span></div>
+          <div class="ax"><span>0</span><span>5분</span><span>10분</span><span>15분</span></div></div>
+        <div class="tc fade" id="tiaW" style="background:rgba(255,90,90,.14)"><div class="li">영구 손상은 남지 않음 · 하지만 <b class="hl-r">뇌졸중의 경고 신호</b> → 즉시 의료 평가</div></div>
+      </div>
+      <div style="flex:.8;display:flex;flex-direction:column;gap:12px">
+        <div class="tc fade" id="tiaS"><h3 style="font-size:21px">갑자기 나타나는 증상</h3><div class="li">· 편측 마비 (얼굴 · 팔 · 다리 한쪽)<br>· 언어 장애 (말하기 · 이해 어려움)<br>· 시각 장애 (시야 흐림 · 상실)<br>· 어지러움 · 균형 상실 · 보행 장애<br>· 갑작스러운 심한 두통</div></div>
+        <div class="tc fade" id="tiaK" style="background:rgba(255,228,92,.10)"><h3 style="font-size:21px" class="hl-y">뇌졸중 위험인자 · 예방</h3><div class="li">고혈압 · 당뇨 · 고지혈증(혈중 지질)<br>심장질환 · 흡연 · 과음 · 비만 · 나이 증가<br>→ 생활습관 관리 + 정기 건강 검진</div></div>
+      </div></div>`);
+    add(`<div class="glass fade" id="kp" style="left:50%;translate:-50% 0;top:170px;width:1180px;text-align:center;padding:26px"><span class="pt" style="position:static;display:inline-block;margin-bottom:12px">국시 핵심</span>
       <div class="row" style="font-size:28px">실어증의 가장 흔한 원인 = <b class="hl-y">대뇌혈관사고 (뇌졸중, CVA)</b></div>
-      <div class="row" style="font-size:24px;margin-top:8px"><b class="hl-b">뇌경색</b>(혈전증 · 색전증)과 <b class="hl-r">뇌출혈</b>을 구분하기</div></div>`);
+      <div class="row" style="font-size:24px;margin-top:8px"><b class="hl-b">뇌경색</b>(혈전증 · 색전증)과 <b class="hl-r">뇌출혈</b>을 구분하기</div>
+      <div class="fade" id="kp2" style="margin-top:22px;display:flex;gap:10px;justify-content:center;flex-wrap:wrap;font-size:20px;font-weight:800">
+        <span style="padding:8px 14px;border-radius:12px;background:rgba(255,228,92,.18)">① 대뇌혈관사고 (최빈)</span><span style="padding:8px 14px;border-radius:12px;background:rgba(79,142,247,.16)">② 외상성 뇌손상</span><span style="padding:8px 14px;border-radius:12px;background:rgba(47,196,138,.16)">③ 뇌종양</span><span style="padding:8px 14px;border-radius:12px;background:rgba(181,123,255,.16)">④ 감염 (뇌염 · 수막염)</span><span style="padding:8px 14px;border-radius:12px;background:rgba(255,159,107,.16)">⑤ 기타 (신진대사 · 영양장애 등)</span></div></div>`);
     add(`<div class="glass fade" id="csfc" style="right:56px;top:140px;width:520px"><h3>뇌실과 뇌척수액</h3>
-      <div class="row" style="font-size:20px">측뇌실 (좌우) → 제3뇌실 → 중뇌수도 → 제4뇌실 → 지주막하강</div>
+      <div class="row" style="font-size:20px">측뇌실 (좌우) → 제3뇌실 → 중뇌수도 → 제4뇌실 → (루시카공 · 마겐디공) → 지주막하강</div>
       <div class="row" style="font-size:19px;margin-top:8px">뇌를 감싸는 쿠션 · 고여 있지 않고 <b>순환</b></div>
       <div class="row fade" id="csf2" style="margin-top:12px;padding:10px 12px;border-radius:12px;background:rgba(255,90,90,.14)">흐름이 막히거나 생산·흡수 균형이 깨지면<br>→ <b class="hl-r">뇌수종</b> · 뇌압 상승 · 인지장애</div></div>`);
     add(`<div class="glass sumg fade" id="sum3">
       <div class="sc" style="--c:#FF9F6B"><h4>경동맥계</h4><div>총경동맥 → 내경동맥 → ACA · MCA<br>앞쪽 순환 · 뇌 혈액 약 80%</div></div>
       <div class="sc" style="--c:#2FC48A"><h4>추골-뇌저동맥계</h4><div>추골동맥 2개 → 뇌저동맥<br>뇌간 · 소뇌 · PCA (뒤쪽 순환)</div></div>
       <div class="sc" style="--c:#FFE45C"><h4>윌리스환</h4><div>전교통 = 좌우 ACA<br>후교통 = 내경동맥 ↔ PCA · 혈류 보충</div></div>
-      <div class="sc" style="--c:#4F8EF7"><h4>ACA</h4><div>뇌 안쪽 면 · 보조운동영역<br>→ 연결피질운동실어증 · 말실행증</div></div>
-      <div class="sc" style="--c:#FF5A5A"><h4>MCA (자주 출제)</h4><div>외측면 대부분 · 가장 흔한 폐색<br>위 → 브로카 · 아래 → 베르니케 · 전체 → 전반</div></div>
-      <div class="sc" style="--c:#B57BFF"><h4>PCA · 소뇌동맥</h4><div>PCA → 실독증 · 시각장애<br>소뇌동맥 → 실조형 마비말장애</div></div>
-      <div class="sc" style="--c:#7FB2FF"><h4>뇌경색 (허혈성)</h4><div>혈전증 = 그 자리에서 막힘<br>색전증 = 흘러와서 막힘 · TIA = 경고 신호</div></div>
-      <div class="sc" style="--c:#FF6B6B"><h4>뇌출혈 (출혈성)</h4><div>뇌내출혈 = 주로 고혈압<br>뇌외출혈 = 지주막하 · 경막하 · 경막외</div></div>
-      <div class="sc" style="--c:#5FD3F0"><h4>뇌막 · 뇌실</h4><div>경막 → 지주막 → 연막 · 지주막하강에 CSF<br>측뇌실 → 3 → 중뇌수도 → 4 · 막히면 뇌수종</div></div></div>`);
-    Q13.forEach((q,i)=>add(quizHTML('q13_'+i, q)));
+      <div class="sc" style="--c:#4F8EF7"><h4>ACA</h4><div>뇌 안쪽 면 · 보조운동영역<br>→ 연결피질운동실어증 · 말실행증<br>넓은 손상 → 무동성 함구증</div></div>
+      <div class="sc" style="--c:#FF5A5A"><h4>MCA (자주 출제)</h4><div>외측면 대부분 · 가장 흔한 폐색<br>위 → 브로카 · 아래 → 베르니케 · 전체 → 전반<br>좌측 MCA → 우측 편마비 + 비유창</div></div>
+      <div class="sc" style="--c:#B57BFF"><h4>PCA · 소뇌동맥</h4><div>PCA → 실독증(순수 실독증) · 시각장애<br>상소뇌 → 실조형 마비말장애<br>후하소뇌 → 삼킴 · 마비말 · 음성</div></div>
+      <div class="sc" style="--c:#7FB2FF"><h4>뇌경색 (허혈성)</h4><div>출혈성보다 훨씬 흔함 · 혈전증 = 그 자리에서<br>색전증 = 흘러와서 막힘 · 열공경색<br>TIA = 5 · 10 · 15분 만에 사라짐, 경고 신호</div></div>
+      <div class="sc" style="--c:#FF6B6B"><h4>뇌출혈 (출혈성)</h4><div>뇌내출혈 = 주로 고혈압 · 동맥류 파열<br>뇌외출혈 = 지주막하 · 경막하 · 경막외<br>위험인자: 고혈압 · 당뇨 · 지질 · 흡연 등</div></div>
+      <div class="sc" style="--c:#5FD3F0"><h4>뇌막 · 뇌실</h4><div>경막 → 지주막 → 연막 · 지주막하강에 CSF<br>경막외·경막하 혈종 · 지주막하 출혈 · 수막염<br>측뇌실 → 3 → 중뇌수도 → 4 · 막히면 뇌수종</div></div></div>`);
+    Q13.forEach((q,i)=>add(quizHTML('q13_'+[0,1,2,3,5,4][i], q)));
 
     /* 3D 라벨 */
     const VL=[['vICA','내경동맥',Vx(-0.24,-0.85,-0.3),'#FF9F6B',-150,70],['vVert','추골동맥',Vx(-0.13,-1.1,0.09),'#2FC48A',-120,30],['vBas','뇌저동맥',Vx(0,-0.62,-0.05),'#2FC48A',110,20],
-      ['vAcom','전교통동맥',Vx(0,-0.46,-0.45),'#FFE45C',90,-60],['vPcom','후교통동맥',Vx(-0.17,-0.46,-0.1),'#FFE45C',-160,10],['vACA','ACA 전대뇌동맥',Vx(-0.03,-0.33,-0.72),'#4F8EF7',-90,-70],
+      ['vAcom','전교통동맥',Vx(0,-0.46,-0.45),'#FFE45C',90,-60],['vPcom','후교통동맥',Vx(-0.17,-0.46,-0.1),'#FFE45C',-170,-45],['vACA','ACA 전대뇌동맥',Vx(-0.03,-0.33,-0.72),'#4F8EF7',-90,-70],
       ['vMCA','MCA 중대뇌동맥',Vx(-0.55,-0.24,-0.12),'#FF5A5A',-60,-80],['vPCA','PCA 후대뇌동맥',Vx(-0.28,-0.42,0.3),'#B57BFF',-110,60],['vSCA','상소뇌동맥',Vx(-0.3,-0.3,0.52),'#7FE0B0',80,-60],['vPICA','후하소뇌동맥',Vx(-0.3,-0.78,0.66),'#7FE0B0',90,40]];
     VL.forEach(([id,t,p,c,dx,dy])=>L3(id,t,G.vessels,p,{color:c,dx,dy}));
     L3('vM1','M1',G.vessels,Vx(-0.34,-0.42,-0.2),{color:'#FF5A5A',dx:-60,dy:60});
@@ -175,59 +224,83 @@ CLIPS.push({ code:'1-3', short:'1-3 뇌혈관', title:'신경해부생리 ③ �
       do(S){ W.lblAllOff(); S.vHi(['vert','basilar','pca','sca','aica','pica']); $('#sy1').style.background=''; $('#sy2').style.background='rgba(47,196,138,.16)'; W.lbl(['vVert','vBas','vPCA']); sfx('glow'); }},
     {id:'3-05', s:'N', t:'두 계통은 뇌 아래에서 고리처럼 이어지는데, 이것이 윌리스환입니다. 전교통동맥은 좌우 전대뇌동맥을, 후교통동맥은 같은 쪽의 내경동맥과 후대뇌동맥을 연결합니다.',
       do(S){ W.lblAllOff(); $('#sy2').style.background=''; S.vHi(['acom','pcom','ica','aca','pca','basilar','mca1']); W.part(['acom','pcom'],{em:0.9}); W.brain({op:0.1}); W.part('cerebellum',{op:0.15}); W.part(['midbrain','pons','medulla','cordTop'],{op:0.22}); W.view('base',2200); later(()=>{ on('#sy3'); W.lbl(['vAcom','vPcom','vICA','vBas','vACA','vPCA','vMCA']); sfx('levelup'); },1500); }},
-    {id:'3-06', s:'N', t:'그래서 고리의 어느 한 곳이 막혀도, 교통동맥을 통해 혈액을 보충해 신경 손상을 미리 막아 줍니다.', do(){ sfx('pop'); }},
+    {id:'3-06', s:'N', t:'그래서 고리의 어느 한 곳이 막혀도, 교통동맥을 통해 혈액을 보충해 신경 손상을 미리 막아 줍니다.', do(){ W.lbl(['vACA','vPCA','vMCA'],false); W.cam([0,-2.87,-1.1],[0,-0.45,-0.24],2200); later(()=>{ W.part(['acom','pcom'],{em:1}); sfx('pop'); },1400); }},
     /* B. 담당 영역 */
     {id:'3-07', s:'N', t:'이제 세 대뇌동맥이 각각 어디에 혈액을 보내는지 보겠습니다. 파란색은 전대뇌동맥, 빨간색은 중대뇌동맥, 보라색은 후대뇌동맥의 영역입니다.',
       do(S){ on('#sys',false); W.lblAllOff(); W.shift(0); W.brain({op:1}); W.part(['cerebellum','midbrain','pons','medulla','cordTop'],{op:1}); W.show({vessels:false}); W.terr([0,1,2]); W.view('front3q',2000); W.spin(0.15); sfx('whoosh'); }},
     {id:'3-08', s:'N', t:'전대뇌동맥은 뇌의 안쪽 면, 전두엽과 두정엽의 안쪽에 혈액을 보냅니다. 보조운동영역이 여기 있어서, 손상되면 연결피질운동실어증과 말실행증이 나타날 수 있습니다.',
       do(S){ W.spin(0); W.hideRight(true); W.terr([0],true); W.view('medial',2200); W.show({vessels:true}); S.vHi(['aca'],true); W.part(ALLV13.filter(n=>n!=='aca'),{op:0}); later(()=>{ W.lbl('tACA'); sfx('glow'); },1500); }},
+    {id:'3-08a', s:'N', t:'전대뇌동맥 영역인 안쪽 전두엽이 넓게 손상되면, 운동 능력은 남아 있는데도 말과 행동을 스스로 시작하지 못하는 무동성 함구증이 나타나기도 합니다.',
+      do(){ W.shift(-280); later(()=>{ on('#acaN'); sfx('pop'); },600); }},
     {id:'3-09', s:'N', t:'중대뇌동맥은 내경동맥의 가장 큰 가지로, 실비안열을 따라 대뇌 외측면 대부분에 혈액을 보냅니다. 국시 해부 문제에 자주 나오고, 뇌졸중에서 가장 흔히 막히는 동맥입니다.',
-      do(S){ W.lblAllOff(); W.hideRight(false); W.terr([1],true); W.part(ALLV13,{op:0}); W.part(['mca1','mcaS','mcaI'],{op:1,em:0.3}); W.view('lateralL',2200); later(()=>{ W.lbl('tMCA'); sfx('glow'); },1500); }},
+      do(S){ on('#acaN',false); W.shift(0); W.lblAllOff(); W.hideRight(false); W.terr([1],true); W.part(ALLV13,{op:0}); W.part(['mca1','mcaS','mcaI'],{op:1,em:0.3}); W.view('lateralL',2200); later(()=>{ W.lbl('tMCA'); sfx('glow'); },1500); }},
     {id:'3-10', s:'N', t:'중대뇌동맥은 기저핵으로 가는 M1, 뇌섬으로 가는 M2, 피질로 가는 M3로 나뉩니다. M3의 위쪽 가지는 일차운동영역과 브로카 영역, 아래쪽 가지는 베르니케 영역에 혈액을 보냅니다.',
-      do(){ W.lbl('tMCA',false); W.shift(-300); on('#mseg'); W.terr([1]); W.part('mcaS',{em:0.9}); later(()=>{ W.lbl('vSup'); W.part('mcaS',{em:0.3}); W.part('mcaI',{em:0.9}); W.lbl('vInf'); sfx('pop'); },5200); sfx('pop'); }},
+      do(){ W.lbl('tMCA',false); W.shift(-300); on('#mseg'); W.cam([-4.25,0.22,-0.05],[-0.2,-0.14,0.0],2400); W.terr([1]); W.part('mcaS',{em:0.9}); later(()=>{ W.lbl('vSup'); W.part('mcaS',{em:0.3}); W.part('mcaI',{em:0.9}); W.lbl('vInf'); sfx('pop'); },5200); sfx('pop'); }},
     {id:'3-11', s:'N', t:'그래서 위쪽 가지가 막히면 브로카 실어증, 아래쪽 가지가 막히면 베르니케 실어증, M1이나 M2가 막혀 실비안열 주변 전체가 손상되면 전반실어증이 됩니다.',
       do(){ W.part('mcaI',{em:0.3}); on('#mseg2'); W.terr(null); W.lobes([0,1]); W.part('mcaS',{em:0.9}); later(()=>{ W.lobes([2]); W.part('mcaS',{em:0.3}); W.part('mcaI',{em:0.9}); sfx('bad'); },3000); later(()=>{ W.lobes([0,1,2]); W.part(['mcaS','mcaI'],{em:0.9}); sfx('bad'); },6000); sfx('bad'); }},
+    {id:'3-11a', s:'N', t:'또 중대뇌동맥은 일차운동영역 중 얼굴과 팔 부분에도 혈액을 보냅니다. 그래서 왼쪽 중대뇌동맥이 막히면, 오른쪽 편마비와 비유창한 전보식 발화가 함께 나타날 수 있습니다. 국시에 실제로 나온 내용입니다.',
+      do(){ W.lobes([0]); W.part(['mcaI'],{em:0.3}); W.part('mcaS',{em:0.9}); later(()=>{ on('#mseg3'); sfx('ding'); },900); }},
     {id:'3-12', s:'N', t:'후대뇌동맥은 후두엽과 측두엽 아래쪽, 그리고 시상에 혈액을 보냅니다. 손상되면 실독증과 시각장애가 나타납니다.',
-      do(S){ on('#mseg',false); W.lblAllOff(); W.shift(0); W.lobes([]); W.brain({lobe:[0,0,0,0],dim:[0,0,0,0]}); W.terr([2],true); W.part(ALLV13,{op:0}); W.part(['pca','basilar'],{op:1,em:0.4}); W.view('postInf',2200); later(()=>{ W.lbl(['tPCA','vPCA']); sfx('glow'); },1500); }},
+      do(S){ on('#mseg',false); on('#mseg3',false); W.lblAllOff(); W.shift(0); W.lobes([]); W.brain({lobe:[0,0,0,0],dim:[0,0,0,0]}); W.terr([2],true); W.part(ALLV13,{op:0}); W.part(['pca','basilar'],{op:1,em:0.4}); W.view('postInf',2200); later(()=>{ W.lbl(['tPCA','vPCA']); sfx('glow'); },1500); }},
+    {id:'3-12a', s:'N', t:'특히 좌측 후두엽과 뇌량 팽대부가 손상되면, 시력은 정상이고 쓰기도 되는데 읽기만 안 되는 순수 실독증, 즉 실서증 없는 실독증이 나타납니다.',
+      do(){ W.shift(-280); later(()=>{ on('#pcaN'); sfx('pop'); },600); }},
     {id:'3-13', s:'N', t:'뇌저동맥에서 나온 소뇌동맥은 소뇌와 뇌간을 담당합니다. 상소뇌동맥이 막히면 실조형 마비말장애가, 후하소뇌동맥이 막히면 연구개와 인두, 후두 문제로 삼킴장애, 마비말장애, 음성장애가 생길 수 있습니다.',
-      do(){ W.lblAllOff(); W.terr(null); W.brain({op:0.3}); W.part(['sca','aica','pica','basilar','vert'],{op:1,em:0.4}); W.part('pca',{op:0.2,em:0}); W.part('cerebellum',{em:0.25}); later(()=>{ W.lbl(['vSCA','vPICA','vBas']); sfx('glow'); },600); }},
+      do(){ on('#pcaN',false); W.shift(0); W.lblAllOff(); W.terr(null); W.brain({op:0.3}); W.part(['sca','aica','pica','basilar','vert'],{op:1,em:0.4}); W.part('pca',{op:0.2,em:0}); W.part('cerebellum',{em:0.25}); later(()=>{ W.lbl(['vSCA','vPICA','vBas']); sfx('glow'); },600); }},
     {id:'3-14', s:'N', t:'혈관별 담당 영역과 손상 증상을 표로 정리합니다.',
       do(){ W.lblAllOff(); W.part('cerebellum',{em:0}); W.brain({op:1}); W.show({vessels:false}); W.terr([0,1,2]); W.view('front3q',1800); W.spin(0.12); W.shift(-320); later(()=>{ on('#terrT'); sfx('ding'); },500); }, gap:2400},
     /* C. 뇌졸중 */
     {id:'3-15', s:'N', t:'이렇게 뇌혈관에 문제가 생겨 갑자기 뇌 기능이 떨어지는 것이 뇌졸중, 즉 대뇌혈관사고입니다. 크게 허혈성과 출혈성으로 나뉩니다.',
       do(S){ on('#terrT',false); W.shift(0); W.spin(0); W.brain({op:0}); later(()=>{ W.show({brain:false}); vesselScene(S); on('#vsl'); on('#stk'); sfx('whoosh'); },500); }},
+    {id:'3-15a', s:'N', t:'뇌졸중은 뇌의 혈액순환 장애로 갑자기 의식장애나 운동마비가 생기는 증후군입니다. 국시에서는 허혈성 뇌졸중이 출혈성보다 훨씬 흔하다는 점도 기억해 두세요.',
+      do(){ $('#sk1').style.outline='3px solid #4F8EF7'; on('#skF'); sfx('pop'); }},
     {id:'3-16', s:'N', t:'허혈성 뇌졸중, 즉 뇌경색은 혈관이 좁아지거나 막혀 혈액 공급이 끊기는 것입니다. 혈전증은 혈관 벽에 혈전이 쌓여, 바로 그 자리를 막는 것입니다.',
-      do(S){ on('#stk',false); S.vsTitle('<span class="hl-b">혈전증</span> · 그 자리에서 쌓여 막힘'); S.vsSet({plaque:1}); later(()=>{ S.vsSet({blockU:true}); sfx('bad'); },2200); }},
+      do(S){ on('#stk',false); $('#sk1').style.outline=''; S.vsTitle('<span class="hl-b">혈전증</span> · 그 자리에서 쌓여 막힘'); S.vsSet({plaque:1}); later(()=>{ S.vsSet({blockU:true}); sfx('bad'); },2200); }},
+    {id:'3-16a', s:'N', t:'혈전은 콜레스테롤이 높은 동물성 지방과 포화지방산, 피의 찌꺼기가 혈관 벽에 쌓여 굳어진 덩어리입니다.',
+      do(S){ S.vsTag('콜레스테롤 · 포화지방 · 피 찌꺼기', S.vsP.x-60, S.vsP.y-48); sfx('pop'); }},
     {id:'3-17', s:'N', t:'색전증은 심장 등에서 떨어져 나온 덩어리, 색전이 혈관을 타고 흐르다가 좁은 혈관을 막는 것입니다.',
-      do(S){ S.vsSet({plaque:0, blockU:false}); S.vsTitle('<span class="hl-b">색전증</span> · 흘러와서 좁은 곳을 막음'); later(()=>{ S.vs.emb=0; },700); }},
+      do(S){ S.vsTag(''); S.vsSet({plaque:0, blockU:false}); S.vsTitle('<span class="hl-b">색전증</span> · 흘러와서 좁은 곳을 막음'); later(()=>{ S.vs.emb=0; },700); later(()=>zoom(800,320,1.22,1800),1500); }},
+    {id:'3-17a', s:'N', t:'뇌 깊은 곳으로 들어가는 가는 관통동맥이 막혀 작은 병변이 생기는 열공경색도 허혈성 뇌졸중에 속합니다.',
+      do(S){ zoomOut(1000); S.vsTitle('<span class="hl-b">열공경색</span> · 가는 관통동맥이 막힘'); later(()=>{ S.vsLac(true); sfx('bad'); },900); }},
     {id:'3-18', s:'N', t:'일과성 허혈 발작, TIA는 증상이 잠깐 나타났다가 사라지는 것입니다. 예를 들어 어지러움은 5분, 팔 마비는 10분, 발음 문제는 15분 만에 사라지는 식이고, 영구 손상은 남지 않지만 뇌졸중의 경고 신호입니다.',
       say:'일과성 허혈 발작, 티아이에이는 증상이 잠깐 나타났다가 사라지는 것입니다. 예를 들어 어지러움은 오 분, 팔 마비는 십 분, 발음 문제는 십오 분 만에 사라지는 식이고, 영구 손상은 남지 않지만 뇌졸중의 경고 신호입니다.',
-      do(S){ S.vs.emb=-1; S.vsSet({blockU:true}); S.vsTitle('<span class="hl-b">TIA</span> · 잠깐 막혔다가 다시 흐름'); on('#tia'); later(()=>{ S.vsSet({blockU:false}); sfx('ok'); },3500); }},
+      do(S){ zoomOut(600); on('#vsl',false); later(()=>{ on('#tia'); sfx('whoosh'); },600);
+        [1,2,3].forEach((k,i)=>{ later(()=>{ $('#tl'+k).classList.add('go'); sfx('bad'); },6200+i*2600); later(()=>{ $('#tl'+k).classList.add('ok'); sfx('ok'); },7900+i*2600); });
+        later(()=>{ on('#tiaW'); sfx('ding'); },15600); }},
+    {id:'3-18a', s:'N', t:'TIA는 미니 뇌졸중이라고도 합니다. 한쪽 얼굴이나 팔다리의 마비, 말하기나 이해의 어려움, 시야 흐림, 어지러움과 균형 상실, 갑작스러운 심한 두통이 나타날 수 있고, 증상이 사라져도 바로 의료 평가를 받아야 합니다.',
+      say:'티아이에이는 미니 뇌졸중이라고도 합니다. 한쪽 얼굴이나 팔다리의 마비, 말하기나 이해의 어려움, 시야 흐림, 어지러움과 균형 상실, 갑작스러운 심한 두통이 나타날 수 있고, 증상이 사라져도 바로 의료 평가를 받아야 합니다.',
+      do(){ on('#tiaS'); sfx('pop'); }},
+    {id:'3-18b', s:'N', t:'뇌졸중의 위험인자는 고혈압, 당뇨, 고지혈증, 심장질환, 흡연, 과도한 음주, 비만이고, 나이가 들수록 발생률이 높아집니다. 그래서 예방은 생활습관 관리와 정기 건강 검진입니다.',
+      do(){ on('#tiaK'); sfx('pop'); }},
     {id:'3-19', s:'N', t:'출혈성 뇌졸중, 즉 뇌출혈은 혈관의 약한 지점이 터져 혈액이 혈관 밖으로 새어 나오는 것입니다. 동맥의 일부가 풍선처럼 부푼 동맥류가 터지면 뇌출혈로 이어질 수 있습니다.',
-      do(S){ on('#tia',false); S.vsSet({blockU:false}); S.vsTitle('<span class="hl-r">뇌출혈</span> · 약한 곳이 부풀어 터짐'); S.vsSet({aneu:0.5}); later(()=>S.vsSet({aneu:1}),1600); later(()=>{ S.vsSet({burst:1}); sfx('bad'); },3600); }},
-    {id:'3-20', s:'N', t:'뇌 안에서 터지는 뇌내출혈은 주로 고혈압으로 동맥벽에 압력이 가해져 생기고, 뇌 바깥의 뇌막 사이에서 생기는 뇌외출혈에는 지주막하 출혈, 경막하 출혈, 경막외 출혈이 있습니다.', do(){ on('#stk'); $('#sk2').style.outline='3px solid #FF6B6B'; sfx('pop'); }},
+      do(S){ on('#tia',false); S.vs.emb=-1; S.vsLac(false); S.vsSet({blockU:false, plaque:0}); S.vsTitle('<span class="hl-r">뇌출혈</span> · 약한 곳이 부풀어 터짐');
+        later(()=>{ on('#vsl'); S.vsSet({aneu:0.5}); sfx('whoosh'); },600); later(()=>{ S.vsSet({aneu:1}); zoom(800,380,1.22,1600); },2200); later(()=>{ S.vsSet({burst:1}); sfx('bad'); },4400); }},
+    {id:'3-20', s:'N', t:'뇌 안에서 터지는 뇌내출혈은 주로 고혈압으로 동맥벽에 압력이 가해져 생기고, 뇌 바깥의 뇌막 사이에서 생기는 뇌외출혈에는 지주막하 출혈, 경막하 출혈, 경막외 출혈이 있습니다.', do(){ zoomOut(900); later(()=>{ on('#stk'); $('#sk2').style.outline='3px solid #FF6B6B'; sfx('pop'); },700); }},
+    {id:'3-20a', s:'N', t:'특히 지주막하 출혈은 주로 뇌동맥류가 터져서 생깁니다. 뇌내출혈의 주된 원인은 외상이 아니라 고혈압이라는 점도 함께 기억하세요.', do(){ sfx('pop'); }},
     {id:'3-21', s:'N', t:'국시 핵심입니다. 실어증의 가장 흔한 원인은 대뇌혈관사고, 뇌졸중이고, 뇌경색과 뇌출혈을 구분하는 것이 중요합니다.', do(){ on('#vsl',false); on('#stk',false); later(()=>{ on('#kp'); sfx('ding'); },400); }},
+    {id:'3-21a', s:'N', t:'실어증의 원인으로는 대뇌혈관사고 외에도 외상성 뇌손상, 뇌종양, 뇌염이나 수막염 같은 감염, 그리고 신진대사장애와 영양장애 등이 있습니다.', do(){ on('#kp2'); sfx('pop'); }},
     /* D. 뇌막 · 혈종 */
     {id:'3-22', s:'N', t:'이번에는 뇌를 보호하는 구조입니다. 뇌는 바깥에서부터 피부와 두개골, 그리고 세 겹의 뇌막에 싸여 있습니다. 뇌막은 바깥부터 경막, 지주막, 연막입니다. 지주막은 거미막이라고도 합니다.',
       do(S){ on('#kp',false); $('#vsl')&&$('#vsl').remove(); later(()=>{ meningesScene(S); on('#mngw'); S.ly(0); seq([()=>S.ly(1),()=>S.ly(2),()=>{S.ly(3);sfx('pop')},()=>{S.ly(4);sfx('pop')},()=>{S.ly(6);sfx('pop')}],1500); },400); }},
     {id:'3-23', s:'N', t:'지주막과 연막 사이의 공간, 지주막하강에는 뇌척수액이 흐르며 뇌를 보호하는 쿠션 역할을 합니다. 연막은 뇌 표면에 딱 붙어 있습니다.', do(S){ S.ly(6); sfx('glow'); }},
-    {id:'3-24', s:'N', t:'두개골과 경막 사이에 피가 고이면 경막외 혈종,', do(S){ S.hm('edh'); sfx('bad'); }},
-    {id:'3-25', s:'N', t:'경막과 지주막 사이에 고이면 경막하 혈종,', do(S){ S.hm('sdh'); sfx('bad'); }},
+    {id:'3-24', s:'N', t:'두개골과 경막 사이에 피가 고이면 경막외 혈종입니다.', do(S){ S.hm('edh'); sfx('bad'); }},
+    {id:'3-25', s:'N', t:'경막과 지주막 사이에 피가 고이면 경막하 혈종입니다.', do(S){ S.hm('sdh'); sfx('bad'); }},
     {id:'3-26', s:'N', t:'지주막 아래의 지주막하강으로 피가 퍼지면 지주막하 출혈입니다. 이런 혈종은 외상성 뇌손상에서 다시 만나게 됩니다.', do(S){ S.hm('sah'); sfx('bad'); }},
+    {id:'3-26a', s:'N', t:'뇌막에 염증이 생기는 뇌수막염도 뇌막 질환입니다. 뇌염과 함께 감염에 의한 실어증의 원인이 될 수 있습니다.', do(S){ S.hm('mgt'); sfx('bad'); }},
     /* E. 뇌실 · 뇌척수액 */
     {id:'3-27', s:'N', t:'뇌척수액은 뇌 속의 빈 공간인 뇌실에 있습니다. 좌우 측뇌실, 제3뇌실, 그리고 제4뇌실이 있습니다.',
       do(S){ on('#mngw',false); W.show({brain:true, vent:true}); W.brain({op:0.15, lobe:[0,0,0,0]}); W.terr(null); W.part('cerebellum',{op:0.35}); W.view('vent',0); W.shift(-300);
         later(()=>{ on('#csfc'); seq([()=>{W.lbl('vLat');sfx('pop')},()=>{W.lbl('v3l');sfx('pop')},()=>{W.lbl('aql');sfx('pop')},()=>{W.lbl('v4l');sfx('pop')}],1100); },500); }},
     {id:'3-28', s:'N', t:'뇌척수액은 측뇌실에서 제3뇌실로, 중뇌수도를 지나 제4뇌실로 흐른 뒤, 뇌와 척수를 둘러싼 지주막하강으로 나가 순환합니다. 고여 있지 않고 계속 순환합니다.', do(){ W.spin(0.1); sfx('glow'); }},
     {id:'3-29', s:'N', t:'이 흐름이 막히거나 생산과 흡수의 균형이 깨지면, 뇌척수액이 과도하게 쌓여 뇌압이 오르는 뇌수종이 생기고, 인지장애가 나타날 수 있습니다.',
-      do(){ W.spin(0); on('#csf2'); W.swell(1); W.part(['latV','v3','aq','v4'],{em:0.6}); sfx('bad'); }},
+      do(){ W.spin(0); W.cam([-2.5,0.72,-2.14],[0,-0.18,0.15],2400); on('#csf2'); W.swell(1); W.part(['latV','v3','aq','v4'],{em:0.6}); sfx('bad'); }},
     /* F. 정리 + 퀴즈 */
     {id:'3-30', s:'N', t:'오늘 배운 내용을 한 장으로 정리합니다.', do(){ on('#csfc',false); W.lblAllOff(); W.swell(0); W.shift(0); W.brain({op:0}); later(()=>{ W.show({brain:false, vent:false}); on('#sum3'); sfx('ding'); },500); }, gap:2600},
     ...quizSteps('q13_0', Q13[0], ()=>on('#sum3',false)),
     ...quizSteps('q13_1', Q13[1], ()=>on('#q13_0',false)),
     ...quizSteps('q13_2', Q13[2], ()=>on('#q13_1',false)),
     ...quizSteps('q13_3', Q13[3], ()=>on('#q13_2',false)),
-    ...quizSteps('q13_4', Q13[4], ()=>on('#q13_3',false)),
+    ...quizSteps('q13_5', Q13[4], ()=>on('#q13_3',false)),
+    ...quizSteps('q13_4', Q13[5], ()=>on('#q13_5',false)),
     {id:'3-31', s:'N', t:'수고하셨습니다. 이것으로 신경해부생리 편을 마칩니다. 다음 시간에는 2편, 실어증을 살펴봅니다.', do(){ on('#q13_4',false); W.show({brain:true}); W.brain({op:1}); W.view('front3q',0); W.spin(0.2); }},
     {wait:2000},
   ]});
