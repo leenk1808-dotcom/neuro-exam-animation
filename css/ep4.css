@@ -1,5 +1,6 @@
 /* EP4 dysarthria panels */
-.e4panel{position:absolute;right:58px;top:145px;width:610px;max-height:525px;padding:25px 28px 24px;overflow:hidden;border:1px solid rgba(144,172,231,.28);background:linear-gradient(145deg,rgba(14,24,48,.94),rgba(22,30,58,.90));box-shadow:0 24px 70px rgba(0,0,0,.35);border-radius:22px;color:#eef3ff;z-index:8}
+@keyframes e4in{from{opacity:0;transform:translateY(14px)}to{opacity:1;transform:none}}
+.e4panel{position:absolute;right:58px;top:145px;width:610px;max-height:580px;padding:25px 28px 24px;overflow:hidden;border:1px solid rgba(144,172,231,.28);background:linear-gradient(145deg,rgba(14,24,48,.94),rgba(22,30,58,.90));box-shadow:0 24px 70px rgba(0,0,0,.35);border-radius:22px;color:#eef3ff;z-index:8;animation:e4in .55s cubic-bezier(.2,.8,.2,1)}
 .e4eyebrow{font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:#89a8ff;font-weight:900;margin-bottom:11px}
 .e4panel h2{font-size:34px;line-height:1.16;margin:0 0 12px;font-weight:900;color:#fff;letter-spacing:-.02em}
 .e4panel h2 small{display:block;font-size:19px;color:#aebce0;margin-top:7px;font-weight:700;letter-spacing:.02em}
@@ -7,4 +8,49 @@
 .e4rows{display:flex;flex-direction:column;gap:8px;margin-top:12px}
 .e4row{display:flex;align-items:flex-start;gap:12px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.055);border:1px solid rgba(168,188,236,.10);font-size:17px;line-height:1.4;color:#e5ecff;font-weight:600}
 .e4row i{font-style:normal;flex:0 0 auto;min-width:30px;color:#ffd66e;font-weight:900;font-size:14px;padding-top:2px}
+.e4row b{color:#fff}
 .e4badge{display:inline-block;margin:0 0 12px;padding:7px 12px;border-radius:999px;color:#bcecff;background:rgba(71,181,236,.12);border:1px solid rgba(71,181,236,.25);font-weight:800;font-size:15px}
+/* 작은 패널 (3D를 넓게 보여 줄 때) */
+.e4panel.sm{width:450px;right:40px;top:150px;padding:20px 22px 20px}
+.e4panel.sm h2{font-size:28px}
+.e4panel.sm .e4sub{font-size:16px;margin-bottom:8px}
+.e4panel.sm .e4row{font-size:15.5px;padding:7px 10px}
+/* 유형 프로필 */
+.e4prof{top:132px;padding:22px 26px 20px}
+.e4prof h2{font-size:32px;margin-bottom:8px}
+.e4prof h2 small{display:inline;font-size:18px;margin-left:8px}
+.e4prof .e4sub{font-size:16.5px;margin-bottom:10px;line-height:1.45}
+.e4sys{display:grid;grid-template-columns:64px 1fr;gap:6px 10px;margin-top:4px}
+.e4sys b{display:flex;align-items:center;justify-content:center;border-radius:10px;font-size:15px;font-weight:900;color:#0d1630;background:#ffd66e;padding:6px 0}
+.e4sys b:nth-of-type(1){background:#8FCBFF}.e4sys b:nth-of-type(2){background:#FFB3C7}.e4sys b:nth-of-type(3){background:#C9B6FF}.e4sys b:nth-of-type(4){background:#FFD66E}.e4sys b:nth-of-type(5){background:#7CF0B0}
+.e4sys span{display:flex;align-items:center;padding:6px 12px;border-radius:10px;background:rgba(255,255,255,.055);border:1px solid rgba(168,188,236,.10);font-size:16px;line-height:1.35;font-weight:650;color:#eef3ff}
+.e4foot{margin-top:10px;padding:9px 12px;border-radius:12px;background:rgba(255,120,120,.08);border:1px solid rgba(255,140,140,.22);font-size:15px;line-height:1.45;color:#ffdede;font-weight:650}
+.e4foot b{color:#ff9b9b;margin-right:10px;font-weight:900}
+/* 표 */
+.e4t{width:100%;border-collapse:separate;border-spacing:0 6px;font-size:17px;font-weight:650;color:#e8eeff}
+.e4t th{font-size:15px;letter-spacing:.04em;color:#9fb2da;text-align:left;padding:4px 12px;font-weight:900}
+.e4t td{padding:9px 12px;background:rgba(255,255,255,.05);line-height:1.35}
+.e4t td:first-child{border-radius:10px 0 0 10px;color:#ffd66e;font-weight:900;white-space:nowrap}
+.e4t td:last-child{border-radius:0 10px 10px 0}
+.e4t th.u,.e4t td.u b{color:#FFC94A}.e4t th.l,.e4t td.l b{color:#5FD3F0}
+.e4cmp td.u,.e4cmp td.l{transition:background .6s,box-shadow .6s,opacity .6s}
+.e4cmp.hu td.u{background:rgba(255,201,74,.16);box-shadow:inset 0 0 0 1px rgba(255,201,74,.35)}
+.e4cmp.hu td.l{opacity:.45}
+.e4cmp.hl td.l{background:rgba(95,211,240,.16);box-shadow:inset 0 0 0 1px rgba(95,211,240,.35)}
+.e4cmp.hl td.u{opacity:.45}
+.e4panel.e4wide{left:120px;right:120px;width:auto;top:118px;max-height:610px}
+.e4t6 td{font-size:17px}
+/* MPT 막대 */
+.e4mpt .mbar{position:relative;height:34px;margin:16px 0 30px;border-radius:17px;background:rgba(255,255,255,.08);border:1px solid rgba(168,188,236,.18);overflow:visible}
+.e4mpt .mbar .fill{position:absolute;left:0;top:0;bottom:0;width:0;border-radius:17px;background:linear-gradient(90deg,#5FD3F0,#7CF0B0);box-shadow:0 0 18px rgba(124,240,176,.45)}
+.e4mpt.go .mbar .fill{width:100%;transition:width 6s linear}
+.e4mpt .mbar i{position:absolute;top:-6px;bottom:-6px;width:3px;background:#ffd66e;border-radius:2px}
+.e4mpt .mbar em{position:absolute;top:40px;transform:translateX(-50%);font-style:normal;font-size:15px;font-weight:900;color:#ffd66e;white-space:nowrap}
+.e4mpt .e4row{font-size:16px;padding:7px 11px}
+.e4mpt .e4row i{min-width:44px}
+/* /퍼/ /터/ /커/ 칩 */
+.e4chips .cg{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:6px}
+.e4chips .ch{padding:12px 14px;border-radius:14px;background:rgba(255,255,255,.06);border:1px solid color-mix(in srgb,var(--c) 55%,transparent);display:flex;flex-direction:column;gap:3px}
+.e4chips .ch b{font-size:26px;color:var(--c);font-weight:900}
+.e4chips .ch span{font-size:17px;font-weight:800;color:#fff}
+.e4chips .ch small{font-size:14px;color:#aebce0;font-weight:700}

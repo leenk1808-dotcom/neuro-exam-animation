@@ -1,0 +1,42 @@
+/* EP 3 실독증·실서증 2차 수정: 자극어 요소 '왜 보나' · 감별표 · 기출 박스 */
+.dr .tok.ok{background:#5EE0A8;color:#062015;box-shadow:0 0 20px rgba(94,224,168,.85)}
+.dr .nd3.on.glow{border-color:#FFE45C;box-shadow:0 0 0 4px rgba(255,228,92,.45),0 0 30px rgba(255,228,92,.7)}
+.why3{right:28px;top:100px;width:790px;padding:16px 24px}
+.why3 h3{margin:0 0 2px;font-size:26px}
+.why3 .sb{font-size:17px;color:#FFE45C;font-weight:800;margin-bottom:6px}
+.why3 .wr{display:grid;grid-template-columns:86px 132px 1fr;gap:12px;align-items:center;padding:8px 8px;border-top:1px solid rgba(255,255,255,.1);border-radius:10px;opacity:.14;transition:opacity .5s,background .5s}
+.why3 .wr.on{opacity:1}
+.why3 .wr.cur{background:rgba(255,228,92,.09)}
+.why3 .k{color:#FFE45C;font-size:21px;font-weight:900}
+.why3 .s span{display:inline-block;padding:3px 12px;border-radius:10px;background:rgba(255,140,140,.14);color:#FFB0B0;font-size:21px;font-weight:900}
+.why3 .s small{display:block;font-size:13px;color:#A9B8D8;font-weight:800;margin-top:3px}
+.why3 .m{font-size:16.5px;font-weight:700;color:#DCE5FA;line-height:1.42}
+.why3 .m b{color:#FFE45C}
+.why3 .m .r{color:#9CF3CC;font-weight:800;margin-top:2px}
+.why3 .m .r b{color:#9CF3CC;text-decoration:underline;text-underline-offset:3px}
+.dx3{left:50%;translate:-50% 0;top:104px;width:1340px;padding:20px 28px}
+.dx3 h3{margin:0 0 8px}
+.dx3 table{width:100%;border-collapse:collapse}
+.dx3 th{font-size:17px;color:#A9B8D8;padding:8px 12px;border-bottom:1px solid rgba(255,255,255,.22);text-align:center}
+.dx3 th:first-child,.dx3 th:last-child{text-align:left}
+.dx3 td{font-size:22px;font-weight:800;padding:13px 12px;border-bottom:1px solid rgba(255,255,255,.08);text-align:center;color:#DCE5FA}
+.dx3 td.t{text-align:left;color:var(--c);font-size:23px;font-weight:900;white-space:nowrap}
+.dx3 td.t small{display:block;font-size:13px;color:#A9B8D8;font-weight:800}
+.dx3 td.d{text-align:left;font-size:18px;color:#BFC9E6}
+.dx3 td.d b{color:#FFE45C}
+.dx3 .o{color:#5EE0A8}.dx3 .x{color:#FF6B6B;font-size:25px}
+.dx3 tr.r{opacity:.12;transition:opacity .5s}.dx3 tr.r.on{opacity:1}
+.dx3 .ft{margin-top:12px;padding:11px 18px;border-radius:14px;background:rgba(255,228,92,.08);border:1px solid rgba(255,228,92,.35);font-size:20px;font-weight:800;color:#FFF3B0}
+.xb3{left:34px;top:598px;width:744px;padding:11px 18px;font-size:17.5px;font-weight:700;color:#DCE5FA;line-height:1.5}
+.xb3 .tg{display:inline-block;font-size:14px;font-weight:900;padding:2px 10px;border-radius:999px;background:rgba(255,228,92,.18);color:#FFE45C;margin-right:8px}
+.xb3 b{color:#FFB0B0}
+.cs3{right:40px;top:108px;width:700px;padding:20px 26px}
+.cs3 h3{margin:0 0 4px}
+.cs3 .sub{font-size:17px;color:#A9B8D8;font-weight:800;margin-bottom:8px}
+.cs3 .it{display:flex;align-items:center;gap:14px;padding:9px 16px;border-radius:12px;background:rgba(0,0,0,.26);margin:7px 0;font-size:23px;font-weight:900;opacity:.12;transition:opacity .45s}
+.cs3 .it.on{opacity:1}
+.cs3 .it small{font-size:15px;color:#A9B8D8;font-weight:800}
+.cs3 .it .v{margin-left:auto;font-size:26px}
+.cs3 .it .v.o{color:#5EE0A8}.cs3 .it .v.x{color:#FF6B6B}
+.cs3 .cc3{margin-top:12px;padding:12px 16px;border-radius:14px;background:rgba(127,178,255,.12);border:1px solid rgba(127,178,255,.45);font-size:20px;font-weight:800;color:#DCE5FA;line-height:1.5}
+.cs3 .cc3 b{color:#7FB2FF}

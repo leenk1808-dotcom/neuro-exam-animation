@@ -23,3 +23,7 @@
 .e7sum {display:grid;grid-template-columns:1fr 1fr;gap:9px}
 .e7sum>div {display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:9px;background:#ffffff0b;border:1px solid #ffffff18}
 .e7sum b {width:110px;color:#ffd56e;font-size:19px}.e7sum span{color:#dce5f6;font-size:16px;line-height:1.35}
+
+/* restrained emphasis for newly expanded exam cues */
+.e7card.on { animation: e7Settle .38s ease-out both; }
+@keyframes e7Settle { from { opacity:.82; transform:translateY(5px) scale(.992) } to { opacity:1; transform:translateY(0) scale(1) } }
