@@ -134,6 +134,9 @@ body.mouse #hud{opacity:1}
 <link rel="stylesheet" href="css/ep8.css">
 <link rel="stylesheet" href="css/ep9.css">
 <link rel="stylesheet" href="css/ep_k.css">
+<link rel="stylesheet" href="css/rev_2.css">
+<link rel="stylesheet" href="css/rev_3.css">
+<link rel="stylesheet" href="css/rev_12.css">
 </head>
 <body>
 <div id="wrap"><div id="stage">
@@ -255,8 +258,18 @@ function applyStart(step){
 }
 function waitMs(ms, tk){ return new Promise(res=>{ let left=ms; const it=setInterval(()=>{ if(RUN!==tk){clearInterval(it);res();return;} if(!paused) left-=50*SPEED; if(left<=0){clearInterval(it);res();} },50); }); }
 async function waitPause(tk){ while(paused && RUN===tk) await waitMs(100, tk); }
+/* ---------- 확대(줌) 연출: 자막·컨트롤은 그대로, 화면(3D·라벨·장면)만 확대 ----------
+   zoom(x, y, s=1.3, ms=1400)  : 무대 좌표(1600×900)의 (x,y)를 중심으로 s배 확대
+   zoom(null) 또는 zoomOut(ms) : 원래 크기로 복귀.  build()마다 자동 초기화 */
+const ZOOM_EL=()=>['#gl','#labels','#scene'].map(s=>document.querySelector(s));
+function zoom(x, y, s=1.3, ms=1400){
+  const off=(x==null||s===1);
+  ZOOM_EL().forEach(e=>{ if(!e) return; e.style.transition=(INSTANT||ms<=0)?'none':`transform ${Math.round(ms/SPEED)}ms cubic-bezier(.33,.0,.2,1)`;
+    if(!off) e.style.transformOrigin=`${x}px ${y}px`; e.style.transform=off?'':`scale(${s})`; });
+}
+function zoomOut(ms=1100){ zoom(null,null,1,ms); }
 function build(ci){
-  stopAudio(); cap.classList.remove('on'); endov.classList.remove('on');
+  zoom(null,null,1,0); stopAudio(); cap.classList.remove('on'); endov.classList.remove('on');
   scene.innerHTML=''; tip(false); S={};
   W.reset();
   CLIPS[ci].build(S);
