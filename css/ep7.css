@@ -1,0 +1,25 @@
+/* Episode 7: dementia */
+.e7card { box-sizing:border-box; padding:23px 27px; z-index:20; }
+.e7card h3 { color:#eaf0ff; font-size:30px; margin:0 0 17px; letter-spacing:.02em; }
+.e7lead { font-size:27px; line-height:1.45; color:#ffe58a; font-weight:800; margin:8px 0 14px; }
+.e7row { font-size:20px; line-height:1.55; color:#dbe4f5; padding:8px 0; border-bottom:1px solid #ffffff18; }
+.e7row b { color:#fff; }
+.e7note { color:#aebdd7; font-size:16px; line-height:1.45; margin-top:13px; }
+.e7key { border-left:4px solid #ffcf56; color:#ffe38a; background:#ffcf5612; padding:12px 15px; margin-top:12px; font-size:20px; font-weight:750; }
+.e7cols { display:grid; grid-template-columns:1fr 1fr; gap:16px; margin:9px 0; }
+.e7cols section { background:#ffffff0b; border:1px solid #ffffff16; border-radius:12px; padding:13px 15px; color:#d8e3f5; font-size:18px; line-height:1.48; }
+.e7cols section b { color:#93d9ff; font-size:20px; }
+.e7cols section b.mint {color:#7fe0c0}.e7cols section b.pink {color:#ff94a2}.e7cols section b.gold {color:#ffd56a}
+.e7cols p { margin:8px 0 0; }.e7cols small {color:#aebbd0;font-size:15px}
+.e7pill { display:inline-block; border:1px solid #ffffff24; border-radius:20px; padding:5px 11px; color:#d9e5fb; margin:3px; }
+.e7scale { display:flex; align-items:center; justify-content:center; gap:26px; padding:12px; font-size:24px; color:#dfe8f8; }
+.e7scale i { color:#8497b7; font-style:normal; }.e7scale .gold {color:#ffd46a}
+.e7ppa {display:grid;grid-template-columns:repeat(3,1fr);gap:12px;margin:9px 0 14px}
+.e7ppa>div {padding:15px;background:#ffffff0b;border:1px solid #ffffff1c;border-radius:12px;text-align:center}
+.e7ppa b {display:block;font-size:21px;color:#d0aaff;margin-bottom:8px}.e7ppa small{font-size:16px;line-height:1.5;color:#d6e0f2}
+.e7icf {display:flex;align-items:center;justify-content:space-between;gap:14px;margin:18px 0}
+.e7icf>div {flex:1;text-align:center;border:1px solid #8bbfff42;background:#7ebaff0d;border-radius:12px;padding:16px 9px}
+.e7icf b {display:block;font-size:20px;color:#9dd5ff;margin-bottom:8px}.e7icf small{font-size:15px;line-height:1.5;color:#d5e0f3}.e7icf i{font-size:24px;color:#ffd36d;font-style:normal}
+.e7sum {display:grid;grid-template-columns:1fr 1fr;gap:9px}
+.e7sum>div {display:flex;gap:12px;align-items:center;padding:10px 12px;border-radius:9px;background:#ffffff0b;border:1px solid #ffffff18}
+.e7sum b {width:110px;color:#ffd56e;font-size:19px}.e7sum span{color:#dce5f6;font-size:16px;line-height:1.35}

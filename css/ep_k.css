@@ -1,0 +1,26 @@
+/* ===== EP K 최신 기출 포인트 ===== */
+.ekhero{position:absolute;left:90px;top:170px;width:620px;color:#EAF0FF}
+.ekhero small{letter-spacing:.2em;color:#8FB2FF;font-weight:800;font-size:16px}
+.ekhero h1{font-size:62px;margin:10px 0 6px;font-weight:900}
+.ekhero p{font-size:24px;color:#A9B8D8;margin:0 0 30px}
+.ekstat{display:flex;gap:16px}
+.ekstat div{background:rgba(255,255,255,.07);border:1px solid rgba(255,255,255,.12);border-radius:16px;padding:14px 20px;min-width:130px}
+.ekstat b{display:block;font-size:38px;color:#FFD66B}
+.ekstat span{font-size:15px;color:#A9B8D8}
+.ekpage{position:absolute;left:56px;right:56px;top:34px;height:710px;color:#EAF0FF}
+.ekpage header{display:flex;align-items:baseline;gap:16px;margin-bottom:18px}
+.ekpage header span{background:#FFD66B;color:#1A1A2E;font-weight:900;border-radius:8px;padding:4px 12px;font-size:16px}
+.ekpage header b{font-size:36px;font-weight:900}
+.ekpage header em{margin-left:auto;font-style:normal;color:#8394B8;font-size:18px}
+.ekgrid{display:grid;grid-template-columns:1fr 1fr;gap:26px}
+.ekgrid.n1{grid-template-columns:1fr;max-width:900px}
+.ekc{min-height:560px;box-sizing:border-box;background:linear-gradient(160deg,rgba(40,56,100,.85),rgba(18,26,52,.9));border:1px solid rgba(143,178,255,.25);border-radius:20px;padding:30px 34px;box-shadow:0 12px 30px rgba(0,0,0,.35)}
+.ekt{display:flex;align-items:center;gap:12px;margin-bottom:14px}
+.eky{font-size:18px;font-weight:800;border-radius:999px;padding:4px 12px;background:#2F4C8F;color:#CFE0FF}
+.eky.y2025{background:#6A3FA8;color:#EBDDFF}
+.ekt b{font-size:30px}
+.ekp,.eka{font-size:30px;line-height:1.4;margin-bottom:18px;font-weight:800}
+.ekp small,.eka small{display:block;font-size:17px;letter-spacing:.08em;color:#8FA6D8;font-weight:800;margin-bottom:3px}
+.eka{color:#7CF0B5;background:rgba(124,240,181,.08);border-left:4px solid #3FD89A;padding:8px 14px;border-radius:8px}
+.eka small{color:#5CC79A}
+.ekx{font-size:24px;line-height:1.6;color:#C9D4EE}

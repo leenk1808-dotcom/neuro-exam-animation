@@ -1,0 +1,10 @@
+/* EP4 dysarthria panels */
+.e4panel{position:absolute;right:58px;top:145px;width:610px;max-height:525px;padding:25px 28px 24px;overflow:hidden;border:1px solid rgba(144,172,231,.28);background:linear-gradient(145deg,rgba(14,24,48,.94),rgba(22,30,58,.90));box-shadow:0 24px 70px rgba(0,0,0,.35);border-radius:22px;color:#eef3ff;z-index:8}
+.e4eyebrow{font-size:14px;letter-spacing:.16em;text-transform:uppercase;color:#89a8ff;font-weight:900;margin-bottom:11px}
+.e4panel h2{font-size:34px;line-height:1.16;margin:0 0 12px;font-weight:900;color:#fff;letter-spacing:-.02em}
+.e4panel h2 small{display:block;font-size:19px;color:#aebce0;margin-top:7px;font-weight:700;letter-spacing:.02em}
+.e4sub{font-size:18px;color:#ccd7f3;line-height:1.55;margin:0 0 15px;font-weight:600}
+.e4rows{display:flex;flex-direction:column;gap:8px;margin-top:12px}
+.e4row{display:flex;align-items:flex-start;gap:12px;padding:9px 12px;border-radius:12px;background:rgba(255,255,255,.055);border:1px solid rgba(168,188,236,.10);font-size:17px;line-height:1.4;color:#e5ecff;font-weight:600}
+.e4row i{font-style:normal;flex:0 0 auto;min-width:30px;color:#ffd66e;font-weight:900;font-size:14px;padding-top:2px}
+.e4badge{display:inline-block;margin:0 0 12px;padding:7px 12px;border-radius:999px;color:#bcecff;background:rgba(71,181,236,.12);border:1px solid rgba(71,181,236,.25);font-weight:800;font-size:15px}
