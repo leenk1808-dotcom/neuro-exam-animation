@@ -406,7 +406,7 @@ function quizHTML(id, o){
 function quizSteps(id, o, pre){
   return [
     {id:id+'-q', s:'N', t:o.say||o.q, do(S){ $$('.quiz').forEach(e=>e.classList.remove('on')); pre&&pre(S); on('#'+id); sfx('pop'); }},
-    {wait:(o.sec||8)*1000, do(){ const q=$('#'+id); q.style.setProperty('--d', ((o.sec||8)/SPEED)+'s'); q.classList.add('run'); }},
+    {wait:(o.sec||8)*1000, do(){ const q=$('#'+id); if(q){ q.style.setProperty('--d', ((o.sec||8)/SPEED)+'s'); q.classList.add('run'); } }}, 
     {id:id+'-a', s:'N', t:o.ex, do(){ $$(`#${id} .op`).forEach(e=>e.classList.add(+e.dataset.i===o.ans?'ok':'no')); sfx('ok'); }},
   ];
 }</script>
