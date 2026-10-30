@@ -54,3 +54,46 @@
 .e4chips .ch b{font-size:26px;color:var(--c);font-weight:900}
 .e4chips .ch span{font-size:17px;font-weight:800;color:#fff}
 .e4chips .ch small{font-size:14px;color:#aebce0;font-weight:700}
+
+/* text-first type scenes */
+.e4panel.e4big{left:52px;right:auto;top:118px;width:calc(66.7% - 80px);max-height:610px;padding:26px 32px 24px}
+.e4panel.e4big h2{font-size:40px}.e4panel.e4big h2 small{font-size:21px}
+.e4panel.e4big .e4badge{font-size:18px}.e4panel.e4big .e4sub{font-size:20px;line-height:1.5}
+.e4panel.e4big .e4sys{grid-template-columns:86px 1fr;gap:8px 12px}.e4panel.e4big .e4sys b{font-size:18px}.e4panel.e4big .e4sys span{font-size:20px;padding:9px 15px}
+.e4panel.e4big .e4foot{font-size:18px;padding:11px 14px}
+#scene.e4-3d-r::after{content:'';position:absolute;right:28px;top:110px;width:31%;height:610px;border-radius:24px;border:1px solid #ff667040;background:radial-gradient(circle at 55% 47%,#ff3c5520,transparent 62%);pointer-events:none;z-index:2}
+.e4face{position:absolute;right:30px;top:104px;width:470px;z-index:9}
+.e4fimg{position:relative;width:470px;height:564px;border-radius:22px;overflow:hidden;border:1px solid #6d7fb0;box-shadow:0 18px 50px #0009;background:#0b1a3e}
+.e4fimg img{position:absolute;inset:0;width:100%;height:100%;object-fit:cover;transition:opacity 1.6s ease}
+.e4fimg img.d,.e4fimg img.t{opacity:0}
+.e4face[data-s="d"] img.d{opacity:1}.e4face[data-s="t"] img.t{opacity:1}
+.e4fimg .fm{position:absolute;font-style:normal;font-size:17px;font-weight:800;color:#fff;background:rgba(10,16,34,.86);border:2px solid #FFD25E;border-radius:12px;padding:6px 11px;line-height:1.25;opacity:0;transition:opacity .6s .9s}
+.e4fimg .fm small{display:block;font-size:13px;color:#ffe9a8;font-weight:700}
+.e4fimg .fm b{color:#FFD25E}
+.e4fimg .fm.up{left:300px;top:110px;border-color:#7CF0B0}.e4fimg .fm.up b{color:#7CF0B0}
+.e4fimg .fm.low{left:14px;top:300px;border-color:#ff6b7a}.e4fimg .fm.low b{color:#ff8b98}
+.e4fimg .fm.tg{left:14px;top:318px;border-color:#ff6b7a}.e4fimg .fm.tg b{color:#ff8b98}
+.e4face[data-s="d"] .fm.up,.e4face[data-s="d"] .fm.low,.e4face[data-s="t"] .fm.up,.e4face[data-s="t"] .fm.tg{opacity:1}
+.e4fimg::after{content:'';position:absolute;left:118px;top:356px;width:70px;height:58px;border-radius:50%;border:3px dashed #ff6b7a;opacity:0;transition:opacity .6s 1s}
+.e4face[data-s="d"] .e4fimg::after{opacity:1}
+.e4face[data-s="t"] .e4fimg::after{opacity:1;left:110px;top:368px;width:92px;height:74px}
+.e4fcap{margin-top:10px;padding:10px 14px;border-radius:12px;background:rgba(10,16,34,.9);border:1px solid #5b6a92;color:#e6ecfa;font-size:17px;font-weight:700;text-align:center}.e4fcap b{color:#ff8b98}
+.e4bulx{display:grid;grid-template-columns:1fr 260px;gap:18px;align-items:start}
+.e4bul .e4row{display:flex;gap:10px;align-items:flex-start;padding:6px 11px;margin-bottom:6px;border-radius:11px;background:rgba(255,255,255,.05);border:1px solid rgba(168,188,236,.14);font-size:16px;line-height:1.4}
+.e4bul .e4row i{font-style:normal;min-width:86px;font-weight:900;color:#9fc4ff;font-size:16px;padding-top:2px}
+.e4bul .e4row b{color:#FFE18A}
+.e4bul .e4row.b1{border-color:#ff7a8a66;background:rgba(255,90,110,.09)}.e4bul .e4row.b1 i{color:#ff8b98}
+.e4bul .e4row.b2{border-color:#8ec5ff55;background:rgba(120,170,255,.08)}
+.e4bulbox{margin:8px 0 7px;padding:8px 12px;border-radius:12px;background:rgba(255,210,94,.1);border:1px solid rgba(255,210,94,.35);color:#ffe9b0;font-size:17px;font-weight:700}
+.e4bulsvg{width:260px;height:410px}
+.e4bulsvg .t{fill:#e6ecfa;font-size:15px;font-weight:800;text-anchor:middle}.e4bulsvg .t.s{font-size:12.5px;fill:#b8c6e6;font-weight:700}.e4bulsvg .t.r{fill:#ff8b98}.e4bulsvg .t.l{text-anchor:start}
+.e4bulsvg .cx{fill:#2a3a6a;stroke:#8ec5ff}.e4bulsvg .md{fill:#4a2f45;stroke:#ff8b98;stroke-width:2}
+.e4bulsvg .umn{stroke:#FFD25E;stroke-width:6;fill:none;stroke-linecap:round}.e4bulsvg .lmn{stroke:#7fe0ff;stroke-width:6;fill:none;stroke-linecap:round}
+.e4bulsvg .x1 path,.e4bulsvg .x2 path{stroke:#ff4d63;stroke-width:6;stroke-linecap:round}
+.e4bulsvg .x2,.e4bulsvg .t.l1{opacity:0;transition:opacity .6s}.e4bulsvg .x1{opacity:1;transition:opacity .6s}
+.e4bul:has(#e4bul.s2) .e4bulsvg .x2{opacity:1}.e4bul:has(#e4bul.s2) .e4bulsvg .x1{opacity:.25}
+.e4bulsvg .t.l1{opacity:1}
+
+.e4panel.e4bul{top:104px;max-height:625px;padding:20px 26px}.e4panel.e4bul h2{font-size:32px;margin-bottom:10px}
+
+.e4panel.e4big .e4row span{font-size:20px;line-height:1.45}.e4panel.e4big .e4row i{font-size:16px}
