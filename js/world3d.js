@@ -666,6 +666,22 @@ const VIEWS={
   vessels:[[-3.3,0.4,-3.6],[0,-0.45,0]],
   vent:[[-3.3,1.0,-2.9],[0,-0.18,0.15]],
 };
+/* 화면에서 3D 물체가 차지하는 영역(무대 1600×900 좌표) — 보충 노트 배치용 */
+W.screenBox=function(){
+  if(!world||!camera) return null; world.updateMatrixWorld(true); camera.updateMatrixWorld(true);
+  const box=new T.Box3(), v=new T.Vector3(); let x0=1e9,y0=1e9,x1=-1e9,y1=-1e9, any=false;
+  world.traverseVisible(o=>{
+    if(!(o.isMesh||o.isLine||o.isPoints) || !o.geometry) return;
+    const m=o.material; const op=Array.isArray(m)?Math.max(...m.map(q=>q.visible===false?0:(q.opacity??1))):(m&&m.visible===false?0:(m?.opacity??1));
+    if(op<0.08) return;
+    if(!o.geometry.boundingBox) o.geometry.computeBoundingBox();
+    box.copy(o.geometry.boundingBox).applyMatrix4(o.matrixWorld);
+    for(let i=0;i<8;i++){ v.set(i&1?box.max.x:box.min.x, i&2?box.max.y:box.min.y, i&4?box.max.z:box.min.z).project(camera);
+      if(v.z>1) continue; const sx=(v.x+1)/2*1600, sy=(1-v.y)/2*900; x0=Math.min(x0,sx); y0=Math.min(y0,sy); x1=Math.max(x1,sx); y1=Math.max(y1,sy); any=true; }
+  });
+  if(!any) return null;
+  return {x:Math.max(0,x0), y:Math.max(0,y0), w:Math.min(1600,x1)-Math.max(0,x0), h:Math.min(900,y1)-Math.max(0,y0)};
+};
 W.view=function(name, ms=1600, rotY=0){ const v=VIEWS[name]; W.cam(v[0], v[1], ms, rotY); };
 W.snap=function(){
   for(const k in parts){ const p=parts[k]; p.cur.op=p.tgt.op; p.cur.em=p.tgt.em; applyPart(p); }
