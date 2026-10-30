@@ -25,8 +25,9 @@ const st=document.createElement('style'); st.textContent=`
 `; document.head.appendChild(st);
 
 const N={ci:-1, key:null, rect:null, timer:null};
+const NX_OFF=new Set(['4-1','4-2','5','6','7','8-1','8-2','9','K']);
 function noteFor(ci, si){
-  const c=CLIPS[ci]; if(!c) return null; const D=(window.NOTE_DATA||{})[c.code]; if(!D) return null;
+  const c=CLIPS[ci]; if(!c || NX_OFF.has(c.code)) return null; const D=(window.NOTE_DATA||{})[c.code]; if(!D) return null;
   let found=null; for(let i=0;i<=si && i<c.steps.length;i++){ const id=c.steps[i].id; if(id && D[id]) found=id; }
   return found ? {id:found, n:D[found]} : null;
 }
@@ -89,7 +90,9 @@ function place(force){
   // 현재 위치가 여전히 비어 있으면 유지
   if(!force && N.key===key && N.rect){ const r=N.rect; let ok=true;
     for(let y=Math.floor(r.y/CELL); y<Math.ceil((r.y+r.h)/CELL)&&ok; y++) for(let x=Math.floor(r.x/CELL); x<Math.ceil((r.x+r.w)/CELL); x++){ if(!g[y]||g[y][x]){ ok=false; break; } }
-    if(ok){ if(wasOn) box.classList.add('on'); return; } }
+    if(ok){ if(wasOn) box.classList.add('on'); return; }
+    box.classList.remove('on'); N.rect=null; N.key=key+'|blocked'; return; }
+  if(!force && N.key===key+'|blocked') return;
   if(wasOn){ box.classList.remove('on'); }
   if(N.key!==key){ render(cur.n); N.key=key; }
   const cs=candidates(g).filter(r=>r.w>=320 && r.h>=150)
