@@ -121,3 +121,20 @@
 
 .e5sprow{display:flex;align-items:center;justify-content:center;gap:34px}.e5sprow .e5word{margin:0!important;font-size:54px}
 #e5speech .e5pill{margin:14px auto 4px}
+
+/* 3차: 핵심 장면의 단계별 초점과 가독성 */
+#e5stage .e5stages.compare .e5stage{opacity:.13;transform:scale(.98)}
+#e5stage .e5stages.compare .e5stage.on{opacity:1;transform:translateY(-7px) scale(1.02)}
+#e5stage .e5stages.compare .e5stage.on:first-child{border-color:#8DBBFF;box-shadow:0 0 18px rgba(120,170,255,.15)}
+#e5symptoms .e5sym{opacity:.2;transition:opacity .35s,transform .35s,border-color .35s}
+#e5symptoms .e5sym.focus{opacity:1;transform:translateY(-4px);border-color:rgba(255,145,155,.7);box-shadow:0 0 20px rgba(255,110,130,.14)}
+#e5speech .e5tries div{opacity:.32;transition:opacity .35s,transform .35s,border-color .35s}
+#e5speech .e5tries div.on{opacity:1;transform:translateY(-4px);border-color:rgba(255,145,155,.65);color:#fff}
+#e5length.prop .e5example span:nth-child(4),#e5length.prop .e5example b:nth-child(6){color:#fff;background:rgba(255,105,120,.16);border-radius:8px;padding:5px 8px}
+#e5diff .e5tight{font-size:18px}
+#e5diff .e5tight td{padding-top:8px;padding-bottom:8px}
+#e5aph .e5aphgrid>div{opacity:.22;transition:opacity .35s,transform .35s,border-color .35s}
+#e5aph .e5aphgrid>div.on{opacity:1;transform:translateY(-4px);border-color:rgba(140,185,255,.65);box-shadow:0 0 18px rgba(90,140,255,.13)}
+#e5eight .e5step{min-height:88px}
+#e5eight .e5step strong{font-size:19px}
+#e5eight .e5step small{font-size:16px}

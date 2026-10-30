@@ -35,3 +35,52 @@
 .e6-residue-list b{font-size:13px;color:#F2F5FF}
 @keyframes e6-route-flow{to{stroke-dashoffset:-40}}
 @keyframes e6-res-pulse{from{opacity:.72;transform:scale(.91);transform-origin:center}to{opacity:1;transform:scale(1.08);transform-origin:center}}
+
+/* R3: one focal canvas; hide the persistent face and checklist unless a stage is being explained. */
+.e6-layout{left:80px;right:80px;top:142px;height:565px;display:block}
+.e6-anat{display:none}
+.e6-side{position:absolute;inset:0;padding:24px 30px;display:flex;flex-direction:column;justify-content:center;background:linear-gradient(145deg,rgba(17,30,57,.98),rgba(7,13,28,.98));}
+.e6-phase{display:none!important}
+.e6-status{font-size:24px;padding:14px 18px;margin:0 0 18px}
+.e6-layout #e6-cards{margin:0;max-width:100%;}
+.e6-panel{font-size:24px;line-height:1.48;min-height:0;padding:10px 8px}
+.e6-panel h3{font-size:28px}
+.e6-panel p{font-size:24px}
+.e6-panel small{font-size:20px;color:#c3d0e8}
+.e6-minihead{font-size:27px}
+.e6-cn>div{padding:13px 16px}.e6-cn b,.e6-cn span{font-size:21px}
+.e6-warning{font-size:20px;padding:12px 16px}
+.e6-two strong{font-size:23px}.e6-two p{font-size:20px}
+.e6-select b,.e6-select span{font-size:20px}
+.e6-transition>span{font-size:20px}.e6-transition small{font-size:17px;max-width:150px}
+.e6-residue-list{gap:12px}.e6-residue-list span{font-size:20px;padding:12px}.e6-residue-list b{font-size:20px}
+.e6-anatomy-mode .e6-side{left:calc(60% + 20px);padding:22px 24px;}
+.e6-anatomy-mode .e6-anat{display:block;position:absolute;left:0;top:0;bottom:0;width:60%;padding:12px}
+.e6-anatomy-mode .e6-anat-head{font-size:21px}.e6-anatomy-mode .e6-anat-head span{font-size:16px}
+.e6-anatomy-mode .e6-face-scene{height:500px}
+.e6-face-img{object-fit:contain}
+.e6-face-tag{font-size:18px}
+.e6-face-anat-label text{font-size:48px}
+.e6-journey-bolus{r:30;filter:drop-shadow(0 0 16px #ffd84f)}
+.e6-journey-bolus{animation:e6-bolus-pulse .9s ease-in-out infinite alternate}
+.e6-face-residue circle{r:28}
+.e6-term{font-size:21px}
+.e6-def b,.e6-def span{font-size:20px}
+.e6-summary{font-size:20px}
+@keyframes e6-bolus-pulse{from{opacity:.78;transform:scale(.9);transform-origin:center}to{opacity:1;transform:scale(1.1);transform-origin:center}}
+
+/* Stage-synced biomechanics cues: oral tongue propulsion and pharyngeal airway protection. */
+.e6-food-route{stroke-dasharray:24 19;animation:e6-route-flow .85s linear infinite;opacity:.9}
+.e6-journey-bolus{r:32;animation:e6-bolus-pulse .72s ease-in-out infinite alternate;filter:drop-shadow(0 0 14px #ffc94d)}
+.e6-move-cue{opacity:0;pointer-events:none}
+.e6-face-scene.e6-stage-1 .e6-tongue-cue,.e6-face-scene.e6-stage-2 .e6-protect-cue{opacity:1}
+.e6-cue-arrow{fill:none;stroke:#FFE27A;stroke-width:15;stroke-linecap:round;stroke-linejoin:round;stroke-dasharray:17 12;filter:drop-shadow(0 0 10px #ffbf35);marker-end:url(#e6-face-arrow)}
+.e6-tongue-arrow{animation:e6-tongue-push 1.15s ease-in-out infinite}
+.e6-elevate-arrow{stroke:#4BF0C0;animation:e6-larynx-lift 1s ease-in-out infinite alternate}
+.e6-epiglottis-arrow{stroke:#70D7FF;animation:e6-epiglottis-flip 1s ease-in-out infinite alternate}
+.e6-move-cue rect{fill:#08152BF2;stroke:#FFD966;stroke-width:4;filter:drop-shadow(0 5px 12px #020716)}
+.e6-move-cue text{font:900 28px sans-serif;fill:#FFF8DE;paint-order:stroke;stroke:#08152B;stroke-width:2px}
+.e6-protect-cue rect{stroke:#5BE7C1}.e6-protect-cue text{fill:#D9FFF2}
+@keyframes e6-tongue-push{0%,100%{stroke-dashoffset:34;transform:translateX(-8px)}50%{stroke-dashoffset:0;transform:translateX(7px)}}
+@keyframes e6-larynx-lift{from{transform:translateY(12px);opacity:.7}to{transform:translateY(-14px);opacity:1}}
+@keyframes e6-epiglottis-flip{from{transform:rotate(-7deg);transform-origin:1080px 610px}to{transform:rotate(12deg);transform-origin:1080px 610px}}

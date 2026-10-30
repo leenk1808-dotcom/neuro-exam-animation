@@ -28,3 +28,7 @@
 /* restrained emphasis for newly expanded exam cues */
 .e7card.on { animation: e7Settle .38s ease-out both; }
 @keyframes e7Settle { from { opacity:.82; transform:translateY(5px) scale(.992) } to { opacity:1; transform:translateY(0) scale(1) } }
+.e7card .e7-muted{opacity:.28;filter:saturate(.55);transition:opacity .35s,filter .35s}
+.e7card .e7-lit{opacity:1;filter:none;color:#fff!important;background:rgba(79,151,255,.12);border-radius:10px;box-shadow:0 0 0 1px rgba(120,180,255,.35);transition:all .35s}
+.e7card .e7cols section.e7-lit{background:linear-gradient(145deg,#26395c,#1b2947);border-color:#83b9ff8c;box-shadow:0 6px 22px #07152f88}
+.e7card .e7key.e7-lit{background:#ffcf5626;border-left-color:#ffe07a}
