@@ -145,3 +145,42 @@
 .e6-anatomy-mode .e6-open-close{grid-template-columns:1fr}
 .e6-anatomy-mode .e6-open-close>.e6oc{min-height:0;flex-direction:row;flex-wrap:wrap;align-items:center;gap:8px 12px;padding:14px 18px}
 .e6-anatomy-mode .e6-open-close b{font-size:24px;width:100%}
+
+/* r5: animated sagittal swallow replaces the static face picture in stage scenes */
+.e6-face-hold{display:none!important}
+.e6-anatomy-mode .e6-anat{justify-content:flex-start!important;padding:14px 14px 10px}
+.e6-sw{position:relative;flex:1;min-height:0;display:flex;flex-direction:column;align-items:center}
+.e6-sw .sw-svg{flex:1;min-height:0;width:100%;height:100%}
+.sw-skin{fill:url(#swSkin);opacity:.62;stroke:#f2c3ab;stroke-width:3}
+.sw-nasal{fill:#2b1d33;opacity:.9}
+.sw-cav{fill:#241322}
+.sw-wall{fill:url(#swMus);stroke:#f3a2ac;stroke-width:1.5}
+.sw-esowall{fill:url(#swMus);opacity:.95}
+.sw-esolum{fill:#241322}
+.sw-sph{fill:#ff6f86;stroke:#ffd1d8;stroke-width:2}
+.sw-dia{stroke:#9fb3d8;stroke-width:2;stroke-dasharray:7 6;opacity:.7}
+.sw-stom{fill:url(#swMus);opacity:.9}
+.sw-air{fill:#173252;stroke:#7fb7ff;stroke-width:2.5}
+.sw-ring{fill:none;stroke:#cfe3ff;stroke-width:3;opacity:.55}
+.sw-vf{stroke:#fff;stroke-width:5;stroke-linecap:round}
+.sw-bone{fill:#efe2c6;stroke:#c9b48e;stroke-width:1.5}
+.sw-cart{fill:none;stroke:#cfe3ff;stroke-width:5;stroke-linecap:round;opacity:.8}
+.sw-velum{fill:none;stroke:url(#swMus);stroke-width:17;stroke-linecap:round}
+.sw-tooth{fill:#fbf8f0;stroke:#c9c1ad;stroke-width:1}
+.sw-lip{fill:#d9707f}
+.sw-tongue{fill:url(#swTongue);stroke:#ffb3bd;stroke-width:2}
+.sw-epi{fill:#ffd166;stroke:#fff1c2;stroke-width:2}
+.sw-bolus{fill:url(#swFood);stroke:#fff3b0;stroke-width:2.5;filter:url(#swGlow)}
+.sw-small{font:700 15px sans-serif;fill:#9fb3d8}
+.sw-lbl rect{fill:#0b1730e8;stroke:#7f9fd0;stroke-width:2}
+.sw-lbl .sw-lead{stroke:#9fbbe8;stroke-width:2;opacity:.75}
+.sw-lbl .sw-lt{font:900 27px sans-serif;fill:#eef4ff}
+.sw-lbl .sw-ls{font:700 16px sans-serif;fill:#b8c8e6}
+.sw-lbl.hot rect{fill:#3b2f0bf2;stroke:#ffd966;stroke-width:3}
+.sw-lbl.hot .sw-lt{fill:#ffe27a}
+.sw-lbl.hot .sw-lead{stroke:#ffd966;opacity:1;stroke-width:3}
+.sw-cap{width:100%;margin-top:6px;padding:10px 14px;border-radius:12px;background:rgba(10,18,40,.92);border:1px solid #ffd96680;display:flex;gap:12px;align-items:center;min-height:48px}
+.sw-cap b{flex:none;padding:4px 10px;border-radius:8px;background:#ffd966;color:#1b1503;font-size:17px}
+.sw-cap span{font-size:19px;font-weight:800;color:#fff;line-height:1.3}
+.sw-cap.pop{animation:swPop .35s ease}
+@keyframes swPop{from{transform:translateY(5px);opacity:.3}to{transform:none;opacity:1}}
