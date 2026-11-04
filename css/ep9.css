@@ -4,3 +4,5 @@
 @keyframes e9Settle { from { opacity:.82; transform:translateY(5px) scale(.992) } to { opacity:1; transform:translateY(0) scale(1) } }
 
 #scene.e9-brain-on::after{content:'';position:absolute;right:28px;top:116px;width:31%;height:595px;border-radius:24px;border:1px solid #ff667044;background:radial-gradient(circle at 55% 47%,#ff3c5524,transparent 62%);pointer-events:none;z-index:2}
+/* r4: opening/closing title cards larger */
+.e9hero,.e9final{left:50%!important;top:44%!important;width:760px!important;translate:-50% -50%;scale:1.4;transform-origin:center;text-align:center}

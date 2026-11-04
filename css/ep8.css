@@ -64,3 +64,8 @@
 .e8focusAccel .e8card:first-child .e8row{opacity:.35}.e8focusAccel .e8card:first-child .e8row:nth-child(4),.e8focusAccel .e8card:first-child .e8row:nth-child(5){opacity:1;color:#ffe46c;background:rgba(255,228,108,.1);border-radius:8px;padding-left:8px}
 .e8focusTime .e8card:first-child{opacity:.32}.e8focusTime .e8card:nth-child(2){border-color:#ffe46c;box-shadow:0 0 26px rgba(255,228,108,.2)}
 .e8fcomp1 .e8stairs>div,.e8fcomp2 .e8stairs>div,.e8fcomp3 .e8stairs>div,.e8fcomp4 .e8stairs>div{opacity:.3}.e8fcomp1 .e8stairs>div:nth-child(1),.e8fcomp2 .e8stairs>div:nth-child(2),.e8fcomp3 .e8stairs>div:nth-child(3),.e8fcomp4 .e8stairs>div:nth-child(4){opacity:1;border-color:#ffe46c;box-shadow:0 0 26px rgba(255,228,108,.22)}
+
+/* r4: brain scenes keep the right third free */
+#scene.e8-brain-on #e8_rhd_anosog .e8video{display:none}
+#scene.e8-brain-on #e8_rhd_anosog .e8cols{grid-template-columns:1fr}
+#scene.e8-brain-on::after{content:'';position:absolute;right:28px;top:126px;width:31%;height:590px;border-radius:24px;border:1px solid #ff667040;background:radial-gradient(circle at 55% 47%,#ff3c5520,transparent 62%);pointer-events:none;z-index:1}

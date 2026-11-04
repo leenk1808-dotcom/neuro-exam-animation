@@ -32,3 +32,25 @@
 .e7card .e7-lit{opacity:1;filter:none;color:#fff!important;background:rgba(79,151,255,.12);border-radius:10px;box-shadow:0 0 0 1px rgba(120,180,255,.35);transition:all .35s}
 .e7card .e7cols section.e7-lit{background:linear-gradient(145deg,#26395c,#1b2947);border-color:#83b9ff8c;box-shadow:0 6px 22px #07152f88}
 .e7card .e7key.e7-lit{background:#ffcf5626;border-left-color:#ffe07a}
+
+/* r4: text-only scenes use the full width with large type; only brain scenes split 2/3 + 1/3 */
+#scene:not(.e7-brain-on) .e7card{left:90px;width:calc(100% - 180px);top:140px;max-height:600px;padding:32px 40px}
+#scene:not(.e7-brain-on) .e7card h3{font-size:40px;margin-bottom:22px}
+#scene:not(.e7-brain-on) .e7lead{font-size:32px}
+#scene:not(.e7-brain-on) .e7row{font-size:26px;line-height:1.5;padding:11px 0}
+#scene:not(.e7-brain-on) .e7key{font-size:26px;padding:15px 20px;margin-top:16px}
+#scene:not(.e7-brain-on) .e7note{font-size:20px}
+#scene:not(.e7-brain-on) .e7cols{gap:22px;margin:14px 0}
+#scene:not(.e7-brain-on) .e7cols section{font-size:23px;padding:18px 22px;line-height:1.5}
+#scene:not(.e7-brain-on) .e7cols section b{font-size:27px}
+#scene:not(.e7-brain-on) .e7cols small{font-size:19px}
+#scene:not(.e7-brain-on) .e7pill{font-size:22px;padding:7px 14px}
+#scene:not(.e7-brain-on) .e7scale{font-size:30px}
+#scene:not(.e7-brain-on) .e7ppa b{font-size:28px}#scene:not(.e7-brain-on) .e7ppa small{font-size:21px}
+#scene:not(.e7-brain-on) .e7icf b{font-size:27px}#scene:not(.e7-brain-on) .e7icf small{font-size:20px}#scene:not(.e7-brain-on) .e7icf>div{padding:22px 14px}
+#scene:not(.e7-brain-on) .e7sum b{width:150px;font-size:25px}#scene:not(.e7-brain-on) .e7sum span{font-size:21px}#scene:not(.e7-brain-on) .e7sum>div{padding:15px 18px}
+#scene.e7-brain-on .e7card h3{font-size:34px}
+#scene.e7-brain-on .e7row{font-size:22px}
+#scene.e7-brain-on .e7key{font-size:22px}
+#scene.e7-brain-on .e7cols section{font-size:20px}
+#scene.e7-brain-on .e7ppa b{font-size:24px}#scene.e7-brain-on .e7ppa small{font-size:18px}
