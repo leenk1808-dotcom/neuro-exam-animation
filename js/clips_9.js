@@ -39,5 +39,16 @@ const steps=[
 ...Q.flatMap((q,i)=>quizSteps('q9_'+i,q,()=>i===0?on('.e9panel',false):on('#q9_'+(i-1),false))),
 {id:'91-21',s:'N',t:'여기까지 신경언어장애 국가시험 대비 강의를 모두 마쳤습니다. 병변과 증상을 연결하되, 실제 평가는 한 사람의 기능과 참여 목표에서 출발한다는 점을 기억해 주세요. 수고하셨습니다.',do(){on('#q9_4',false);W.reset();e9Text();add(`<div class="e9final fade on"><small>END OF SERIES</small><h1>수고하셨습니다</h1><p>병변을 이해하고, 사람의 의사소통을 지원합니다.</p></div>`);sfx('levelup');},gap:2000},{wait:1800}
 ];
-CLIPS.push({code:'9',short:'뇌성마비·기타',title:'뇌성마비 · 기타 신경말장애',desc:'뇌성마비 유형 · 신경말더듬 · 함구증 · 심인성 말장애',build(S){e9Text();Q.forEach((q,i)=>add(quizHTML("q9_"+i,q)));},steps});
+/* r4 fit: text-only scenes use the full width and larger type; brain scenes keep 2/3 for text */
+function e9Fit(){
+  const brain=!!document.querySelector('#scene')?.classList.contains('e9-brain-on'), TOP=112, BOTTOM=726;
+  document.querySelectorAll('.e9panel').forEach(p=>{
+    if(!p.getClientRects().length) return;
+    const fullW=brain?990:1496, MAX=1.5; let s=MAX;
+    p.style.transformOrigin='top left'; p.style.maxHeight='none';
+    for(s=MAX;s>.75;s-=.03){ p.style.width=(fullW/s)+'px'; if(p.scrollHeight*s<=BOTTOM-TOP) break; }
+    p.style.width=(fullW/s)+'px'; p.style.scale=s.toFixed(3);
+  });
+}
+steps.forEach(st=>{ if(typeof st.do!=='function') return; const d=st.do; st.do=function(){ const r=d.apply(this,arguments); e9Fit(); setTimeout(e9Fit,80); setTimeout(e9Fit,900); return r; }; });CLIPS.push({code:'9',short:'뇌성마비·기타',title:'뇌성마비 · 기타 신경말장애',desc:'뇌성마비 유형 · 신경말더듬 · 함구증 · 심인성 말장애',build(S){e9Text();Q.forEach((q,i)=>add(quizHTML("q9_"+i,q)));},steps});
 })();
