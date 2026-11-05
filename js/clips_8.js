@@ -160,7 +160,7 @@ CLIPS.push({code:'8-2',short:'8-2 외상성 뇌손상',title:'외상성 뇌손�
 ]});
 /* r4 fit: panels scale up to fill the stage (text larger), shrink only if they would reach the subtitles;
    when the 3D brain is on, panels take about 2/3 of the width so the brain keeps the right third */
-if(!W.__e8wrap){ const _show=W.show.bind(W); W.show=function(o){ if(o&&('brain' in o)){ W.__e8b=!!o.brain; document.querySelector('#scene')?.classList.toggle('e8-brain-on',W.__e8b); } return _show.apply(W,arguments); }; W.__e8wrap=true; }
+if(!W.__e8wrap){ const _show=W.show.bind(W); W.show=function(o){ if(o&&('brain' in o)){ W.__e8b=!!o.brain; document.querySelector('#scene')?.classList.toggle('e8-brain-on',W.__e8b&&!!document.querySelector('.e8head')); } return _show.apply(W,arguments); }; W.__e8wrap=true; }
 function e8Fit(){
   const brain=!!W.__e8b, TOP=145, BOTTOM=708;
   document.querySelectorAll('.e8p').forEach(p=>{ if(!p.classList.contains('on')){ p.style.transform=''; p.style.width=''; p.style.right=''; p.style.minHeight=''; } });

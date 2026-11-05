@@ -25,7 +25,7 @@ const st=document.createElement('style'); st.textContent=`
 `; document.head.appendChild(st);
 
 const N={ci:-1, key:null, rect:null, timer:null};
-const NX_OFF=new Set(['4-1','4-2','5','6','7','8-1','8-2','9','K']);
+const NX_OFF=new Set(['1-1','1-2','2-2','3','4-1','4-2','5','6','7','8-1','8-2','9','K']);
 function noteFor(ci, si){
   const c=CLIPS[ci]; if(!c || NX_OFF.has(c.code)) return null; const D=(window.NOTE_DATA||{})[c.code]; if(!D) return null;
   let found=null; for(let i=0;i<=si && i<c.steps.length;i++){ const id=c.steps[i].id; if(id && D[id]) found=id; }

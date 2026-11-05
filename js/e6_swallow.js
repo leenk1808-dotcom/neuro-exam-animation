@@ -12,7 +12,7 @@ const lerp=(a,b,u)=>a+(b-a)*u, P=(x,y)=>x.toFixed(1)+' '+y.toFixed(1);
 function spline(pts,closed){ const n=pts.length; let d='M'+P(...pts[0]); const g=i=>closed?pts[(i+n)%n]:pts[cl(i,0,n-1)]; const m=closed?n:n-1; for(let i=0;i<m;i++){ const p0=g(i-1),p1=g(i),p2=g(i+1),p3=g(i+2); d+=' C'+P(p1[0]+(p2[0]-p0[0])/6,p1[1]+(p2[1]-p0[1])/6)+' '+P(p2[0]-(p3[0]-p1[0])/6,p2[1]-(p3[1]-p1[1])/6)+' '+P(p2[0],p2[1]); } return d+(closed?' Z':''); }
 
 /* ---------- 시간표 (초) ---------- */
-const SEG={full:[0,6.9],prep:[0,1.35],oral:[1.0,2.75],phar:[2.35,4.25],ues:[2.6,4.4],eso:[3.95,6.9]};
+const SEG={pen:[2.0,3.9],asp:[2.0,4.1],res:[2.2,5.2],full:[0,6.9],prep:[0,1.35],oral:[1.0,2.75],phar:[2.35,4.25],ues:[2.6,4.4],eso:[3.95,6.9]};
 const CAPS=[
  [0,   '구강준비','씹으면서 침과 섞어 음식덩이를 만들어요',['tongue']],
  [1.25,'구강',   '혀끝부터 입천장을 차례로 눌러 음식덩이를 뒤로 밀어요',['tongue']],
@@ -23,7 +23,7 @@ const CAPS=[
  [4.08,'식도','UES가 다시 닫히고 연동운동으로 내려가요',['eso','ues']],
  [5.55,'식도','하부식도괄약근(LES)이 열려 위로 들어가요',['les','stom']],
  [6.55,'','다시 처음부터',[]]];
-function cap(t){ let c=CAPS[0]; for(const x of CAPS) if(t>=x[0]) c=x; return c; }
+function cap(t){ const M=window.E6SW&&E6SW.mode; if(M==='pen'&&t>2.85) return [0,'침습','음식물이 후두 안에 들어왔지만 성대 위에서 멈춰요',['air','epi']]; if(M==='asp'&&t>2.85) return [0,'흡인','음식물이 성대를 지나 기도 아래로 들어가요',['air']]; if(M==='res'&&t>4.2) return [0,'잔여물','삼킨 뒤 후두개곡·조롱박굴·구강에 음식물이 남아요',['epi','ues','tongue']]; let c=CAPS[0]; for(const x of CAPS) if(t>=x[0]) c=x; return c; }
 
 function state(t){
   const s={};
@@ -43,6 +43,11 @@ function state(t){
   s.br  = K(t,[[0,[23,15]],[2.3,[21,14]],[2.95,[13,22]],[3.9,[11,25]],[4.35,[12,21]],[5.6,[12,21]],[6.15,[17,13]],[6.6,[20,11]]]);
   s.bo  = K(t,[[0,1],[6.55,1],[6.85,0]]);
   s.eA  = (t>4.1&&t<5.95)?1:0;
+  const M=window.E6SW&&E6SW.mode; s.res=0;
+  if(M==='pen'||M==='asp'){ s.L*=0.45; s.e=Math.min(s.e,0.3); s.u=0; s.pA*=0.4; s.vf = M==='pen'?s.vf:0;
+    s.b = K(t,[[2.15,[292,262]],[2.55,[350,292]],[2.85,[372,345]],[3.15,[358,410]],[3.45,[357,M==='pen'?452:520]],[3.9,[357,M==='pen'?458:600]]]);
+    s.br = K(t,[[2.3,[21,14]],[3.0,[14,18]],[3.6,[11,16]]]); }
+  if(M==='res'){ s.res=K(t,[[3.9,0],[4.3,1]]); s.br=K(t,[[2.3,[21,14]],[2.95,[13,22]],[3.9,[9,17]],[4.35,[8,13]]]); }
   return s;
 }
 
@@ -86,6 +91,7 @@ function build(el){
   <path class="sw-tooth" d="M100 251 L124 250 L124 264 L102 264 Z"/>
   <path class="sw-lip" d="M74 252 C88 250 102 254 108 262 C98 270 84 270 76 266 Z"/>
   <path id="swTon" class="sw-tongue"/>
+  <g id="swRes" class="sw-res"><ellipse cx="344" cy="436" rx="11" ry="7"/><ellipse cx="394" cy="506" rx="9" ry="8"/><ellipse cx="168" cy="296" rx="13" ry="6"/><ellipse cx="422" cy="400" rx="5" ry="10"/></g>
   <ellipse id="swBol" class="sw-bolus"/>
   <path id="swEpi" class="sw-epi" d="M-5 0 C-11 -30 -7 -58 4 -74 C11 -58 9 -30 5 0 Z"/>
   <g id="swLab"></g>`;
@@ -152,6 +158,7 @@ function render(V,t){
   const eb=epiBase(s); q('swEpi').setAttribute('transform',`translate(${P(...eb)}) rotate(${epiAng(s).toFixed(1)})`);
   // bolus
   const bb=q('swBol'); bb.setAttribute('cx',s.b[0].toFixed(1)); bb.setAttribute('cy',(s.b[1]+(t<1.2?s.jaw*4:0)).toFixed(1)); bb.setAttribute('rx',s.br[0].toFixed(1)); bb.setAttribute('ry',s.br[1].toFixed(1)); bb.style.opacity=s.bo;
+  q('swRes').style.opacity=s.res;
   // labels + caption
   const c=cap(t);
   for(const [k,,,fn,lx,ly] of V.LBL){ const g=V.labEls[k], a=fn(s), ln=g.querySelector('line'); ln.setAttribute('x1',lx); ln.setAttribute('y1',ly); ln.setAttribute('x2',a[0].toFixed(1)); ln.setAttribute('y2',a[1].toFixed(1)); g.classList.toggle('hot',c[3].includes(k)); }
@@ -161,7 +168,8 @@ function render(V,t){
 /* ---------- 재생 ---------- */
 const SA={V:null,raf:0,seg:SEG.full,t:0,hold:0,last:0,
   mount(el){ if(!el) return; this.V=build(el); this.t=0; render(this.V,0); },
-  play(name){ if(!this.V) return; this.seg=SEG[name]||SEG.full; this.t=this.seg[0]; this.hold=0; this.last=performance.now(); render(this.V,this.t); cancelAnimationFrame(this.raf); this.raf=requestAnimationFrame(this.tick); },
+  mode:null,
+  play(name){ if(!this.V) return; this.mode=(name==='pen'||name==='asp'||name==='res')?name:null; this.V.capKey=null; this.seg=SEG[name]||SEG.full; this.t=this.seg[0]; this.hold=0; this.last=performance.now(); render(this.V,this.t); cancelAnimationFrame(this.raf); this.raf=requestAnimationFrame(this.tick); },
   stop(){ cancelAnimationFrame(this.raf); },
   tick(now){ const A=SA; if(!A.V||!A.V.svg.isConnected){ return; }
     let dt=Math.min(.1,(now-A.last)/1000); A.last=now;
