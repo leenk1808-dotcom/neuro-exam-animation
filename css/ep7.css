@@ -54,3 +54,7 @@
 #scene.e7-brain-on .e7key{font-size:22px}
 #scene.e7-brain-on .e7cols section{font-size:20px}
 #scene.e7-brain-on .e7ppa b{font-size:24px}#scene.e7-brain-on .e7ppa small{font-size:18px}
+
+/* audit C: brain scenes keep the card left of the brain */
+#scene.e7-brain-on .e7card{width:calc(60% - 60px)}
+

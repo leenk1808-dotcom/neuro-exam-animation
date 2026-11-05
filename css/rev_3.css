@@ -40,3 +40,7 @@
 .cs3 .it .v.o{color:#5EE0A8}.cs3 .it .v.x{color:#FF6B6B}
 .cs3 .cc3{margin-top:12px;padding:12px 16px;border-radius:14px;background:rgba(127,178,255,.12);border:1px solid rgba(127,178,255,.45);font-size:20px;font-weight:800;color:#DCE5FA;line-height:1.5}
 .cs3 .cc3 b{color:#7FB2FF}
+
+/* audit B: exam strip grows upward, never into subtitles */
+.xb3{top:auto!important;bottom:182px;display:block!important;max-height:170px;overflow:hidden}
+.xb3 .tg{display:inline-block!important;width:auto!important}

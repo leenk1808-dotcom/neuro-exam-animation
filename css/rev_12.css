@@ -85,3 +85,12 @@
 #r12face .r12f-mouth-inset b{display:block;color:#FFE45C;font-size:16px;margin-bottom:5px}#r12face .r12f-mouth-inset span{display:block;color:#fff;padding:2px 0}
 #r12face.on .r12f-mark{animation:r12facepop .45s ease both}
 @keyframes r12facepop{from{opacity:.3;scale:.8}to{opacity:1;scale:1}}
+
+/* audit A: emphasis instead of a cropping zoom on the homunculus card (1-41h) */
+#homu.glowx{box-shadow:0 0 0 3px #ffd96699,0 0 38px #ffd96655;transition:box-shadow .5s}
+
+
+/* audit A: face map - remove duplicate outside chips (circle marks show the same nerves), lift XI above subtitles */
+#r12face .r12f-tag{display:none}
+#r12face .r12f-mark.neck{top:76%}
+
